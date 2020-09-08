@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "echo starting... && ng serve",
     "build": "ng build",
-    "build:ssr": "ng run my_new_app:server:dev",
+    "build:ssr": "ng run BibliotecaOtacaAglr:server:dev",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -22,7 +22,6 @@
     "@angular/platform-server": "9.1.12",
     "@angular/router": "9.1.12",
     "@fortawesome/fontawesome-free": "^5.14.0",
-    "@nguniversal/module-map-ngfactory-loader": "8.1.1",
     "aspnet-prerendering": "^3.0.1",
     "bootstrap": "^4.5.2",
     "core-js": "^3.6.5",
