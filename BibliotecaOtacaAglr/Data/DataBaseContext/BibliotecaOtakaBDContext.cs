@@ -50,7 +50,7 @@ namespace BibliotecaOtacaAglr.Data.DataBaseContext
             modelBuilder.Entity<Anime_Episodio_Servidor>()
                 .HasOne(af => af.Anime_Episodio)
                 .WithMany(u => u.UrlServidores)
-                .HasForeignKey(af => af.Anime_EpisodioId)
+                .HasForeignKey(af => af.EpisodioId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Anime_Genero>()

@@ -1,5 +1,6 @@
 ﻿using BibliotecaOtacaAglr.Models.Generos.ViewModel;
 using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -22,6 +23,11 @@ namespace BibliotecaOtacaAglr.Models.Animes.ViewModel
         [Required]
         [DataType(DataType.Text)]
         public string Descripcion { get; set; }
+
+        /// <summary>
+        /// Fecha de publicacion del anime
+        /// </summary>
+        public DateTime Fecha_publicacion { get; set; }
 
         /// <summary>
         /// Imagen de la portada que tendra el anime

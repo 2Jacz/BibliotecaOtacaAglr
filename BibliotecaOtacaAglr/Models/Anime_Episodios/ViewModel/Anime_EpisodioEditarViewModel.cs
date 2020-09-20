@@ -11,19 +11,19 @@ namespace BibliotecaOtacaAglr.Models.Anime_Episodios.ViewModel
         /// Identificador del episodio
         /// </summary>
         [Required]
-        public int Id { get; set; }
+        public int EpisodioId { get; set; }
         /// <summary>
         /// Titulo del episodio
         /// </summary>
         [Required]
         [Display(Name = "Titulo del episodio")]
-        public string Titulo_capitulo { get; set; }
+        public string Titulo_episodio { get; set; }
         /// <summary>
         /// Numero del capitulo
         /// </summary>
         [Required]
         [Display(Name = "Numero del episodio")]
-        public double Numero_capitulo { get; set; }
+        public double Numero_episodio { get; set; }
         /// <summary>
         /// Relacion con las url donde esta alojado el episodio
         /// </summary>

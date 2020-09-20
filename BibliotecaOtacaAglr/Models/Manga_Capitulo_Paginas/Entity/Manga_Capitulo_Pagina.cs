@@ -12,19 +12,25 @@ namespace BibliotecaOtacaAglr.Models.Manga_Capitulo_Paginas.Entity
         /// Identificador de la pagina
         /// </summary>
         [Key]
-        public int ID { get; set; }
+        public int PaginaId { get; set; }
+
         /// <summary>
         /// Numero de pagina
         /// </summary>
-        public string Numero_pagina { get; set; }
+        public double Numero_pagina { get; set; }
+
         /// <summary>
         /// La pagina en arreglo de bytes
         /// </summary>
+        [Required]
         public byte[] Pagina { get; set; }
+
         /// <summary>
         /// Relacion con el capitulo de manga al que pertenece la pagina
         /// </summary>
+        [Required]
         public int CapituloId { get; set; }
+
         /// <summary>
         /// Instancia del capitulo de manga al que pertenece la pagina (o navegacion)
         /// </summary>

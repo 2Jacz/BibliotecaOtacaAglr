@@ -31,10 +31,10 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
         public async Task<ActionResult<IEnumerable<Manga_Capitulo_Pagina>>> ObtenerCapituloPaginas(int capituloid)
         {
             List<Manga_Capitulo_Pagina> paginas = await _context.Manga_Capitulo_Paginas.Where(p => p.CapituloId == capituloid).OrderBy(p => p.Numero_pagina).ToListAsync();
-            return Ok(paginas);
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = paginas });
         }
 
-        // GET: api/Manga/5/Capitulo/5/Paginas
+        // GET: api/Manga/5/Capitulo/5/Paginas/5
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<Manga_Capitulo_Pagina>> ObtenerPaginas(int id)
@@ -43,51 +43,45 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
 
             if (paginas == null)
             {
-                return NotFound("Recurso no encontrado");
+                return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = "Pagina inexistente" });
             }
 
-            return Ok(paginas);
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = paginas });
         }
 
         // POST: api/Manga/5/Capitulo/5/Paginas/Agregar
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost("Agregar")]
-        public async Task<ActionResult<Manga_Capitulo_Pagina>> AgregarPaginas([FromBody][Bind("Nombre_pagina,CapituloId")] Manga_Capitulo_Pagina paginas, [FromForm][Bind("Pagina")] IFormFile pagina)
+        public async Task<ActionResult<Manga_Capitulo_Pagina>> AgregarPaginas([FromBody][Bind("Numero_pagina,CapituloId")] Manga_Capitulo_Pagina paginas, [FromForm][Bind("Pagina")] IFormFile pagina)
         {
             try
             {
                 if (pagina == null)
                 {
-                    return BadRequest("Pagina imagen no encontrada");
+                    return BadRequest(new ApiResponseFormat() { Estado = StatusCodes.Status400BadRequest, Mensaje = "Pagina invalida" });
                 }
 
                 MemoryStream ms = new MemoryStream();
                 pagina.CopyTo(ms);
                 paginas.Pagina = ms.ToArray();
 
-                if (ModelState.IsValid)
-                {
-                    _context.Manga_Capitulo_Paginas.Add(paginas);
-                    await _context.SaveChangesAsync();
+                _context.Manga_Capitulo_Paginas.Add(paginas);
+                await _context.SaveChangesAsync();
 
-                    return Ok(paginas);
-                }
-
-                return BadRequest("Datos invalidos");
+                return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status201Created, Mensaje = "Pagina subida exitosamente", Dato = paginas });
             }
             catch (Exception ex)
             {
                 return BadRequest(new ApiResponseFormat() { Estado = ex.HResult, Mensaje = ex.Message });
             }
-            //return CreatedAtAction("GetPaginas", new { id = paginas.ID }, paginas);
         }
 
         // DELETE: api/Manga/5/Capitulo/5/Paginas/Eliminar/5
         [HttpDelete("Eliminar/{id}")]
         public async Task<ActionResult<Manga_Capitulo_Pagina>> DeletePaginas(int id)
         {
-            Manga_Capitulo_Pagina paginas = await _context.Manga_Capitulo_Paginas.Where(p => p.ID == id).FirstOrDefaultAsync();
+            Manga_Capitulo_Pagina paginas = await _context.Manga_Capitulo_Paginas.Where(p => p.PaginaId == id).FirstOrDefaultAsync();
 
             if (paginas == null)
             {
@@ -99,7 +93,7 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
                 _context.Manga_Capitulo_Paginas.Remove(paginas);
                 await _context.SaveChangesAsync();
 
-                return Ok(paginas);
+                return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = paginas });
             }
             catch (Exception ex)
             {

@@ -12,13 +12,13 @@ namespace BibliotecaOtacaAglr.Models.Anime_Episodios.ViewModel
         /// </summary>
         [Required]
         [Display(Name = "Titulo del episodio")]
-        public string Titulo_capitulo { get; set; }
+        public string Titulo_episodio { get; set; }
         /// <summary>
         /// Numero del episodio
         /// </summary>
         [Required]
         [Display(Name = "Numero del episodio")]
-        public double Numero_capitulo { get; set; }
+        public double Numero_episodio { get; set; }
         /// <summary>
         /// Relacion con las url donde esta alojado el episodio
         /// </summary>
@@ -32,7 +32,7 @@ namespace BibliotecaOtacaAglr.Models.Anime_Episodios.ViewModel
         /// <summary>
         /// Relacion con el anime
         /// </summary>
-        public int animeId { get; set; }
+        public int AnimeId { get; set; }
 
         /// <summary>
         /// Instancia del anime al que pertenecera el capitulo (o navegacion)

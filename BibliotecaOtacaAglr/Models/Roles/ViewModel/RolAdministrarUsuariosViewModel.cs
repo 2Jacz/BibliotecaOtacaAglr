@@ -2,10 +2,11 @@
 
 namespace BibliotecaOtacaAglr.Models.Roles.ViewModel
 {
-    public class RolAsignarUsuariosViewModel
+    public class RolAdministrarUsuariosViewModel
     {
         [Required]
         public string Rol_Nombre { get; set; }
+        [Required]
         public string Rol_Id { get; set; }
         public string[] AniadirUsuariosIds { get; set; }
         public string[] EliminarUsuariosIds { get; set; }

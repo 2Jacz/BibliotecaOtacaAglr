@@ -30,29 +30,43 @@ namespace BibliotecaOtacaAglr.Controllers.Generos
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Genero>>> ListaGeneros()
         {
-            return Ok(await _context.Generos.Include(g => g.Animes).Include(g => g.Mangas).OrderBy(g => g.Nombre).ToListAsync());
+            List<Genero> info = await _context.Generos.OrderBy(g => g.Nombre).ToListAsync();
+
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = info });
         }
 
         // GET: api/Generos/5
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Genero>>> ObtenerGenero(int id)
+        public async Task<ActionResult<IEnumerable<Genero>>> ObtenerGenero(string nombre = "")
         {
-            return Ok(await _context.Generos.Where(g => g.ID == id).Include(g => g.Animes).Include(g => g.Mangas).FirstOrDefaultAsync());
+            if (string.IsNullOrEmpty(nombre))
+            {
+                return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = "Genero incorrecto" });
+            }
+
+            Genero genero = await _context.Generos.Where(g => g.Nombre == nombre).Include(g => g.Animes).Include(g => g.Mangas).FirstOrDefaultAsync();
+
+            if (genero == null)
+            {
+                return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = $"El genero '{nombre}' no existe" });
+            }
+
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = genero });
         }
 
         // PUT: api/Generos/Editar/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("Editar/{id}")]
-        public async Task<IActionResult> EditarGeneros(int id, [FromBody][Bind("ID,Nombre")] Genero generos)
+        public async Task<IActionResult> EditarGeneros(int id, [FromBody][Bind("GeneroId,Nombre")] Genero generos)
         {
-            if (id != generos.ID)
+            if (id != generos.GeneroId)
             {
                 return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = "Error al conseguir el genero deseado" });
             }
 
-            if (_context.Generos.Any(g => g.Nombre.ToLower() == generos.Nombre.ToLower() && g.ID != id))
+            if (_context.Generos.Any(g => g.Nombre.ToLower() == generos.Nombre.ToLower() && g.GeneroId != id))
             {
                 return Conflict(new ApiResponseFormat() { Estado = StatusCodes.Status409Conflict, Mensaje = $"El genero {generos.Nombre} ya existe." });
             }
@@ -132,7 +146,7 @@ namespace BibliotecaOtacaAglr.Controllers.Generos
 
         private bool GenerosExists(int id)
         {
-            return _context.Generos.Any(e => e.ID == id);
+            return _context.Generos.Any(e => e.GeneroId == id);
         }
     }
 }

@@ -17,7 +17,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaOtacaAglr.Controllers.Permisos
 {
-    [Route("api/[controller]")]
+    [Route("api/Gestionar/Permisos")]
     [Authorize]
     [ApiController]
     public class PermisosUsuariosController : ControllerBase
@@ -45,10 +45,10 @@ namespace BibliotecaOtacaAglr.Controllers.Permisos
                 usuarios_filtrados = await _userManager.Users.Where(u => u.UserName == filtro).ToListAsync();
             }
 
-            return Ok(usuarios_filtrados);
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = usuarios_filtrados });
         }
 
-        [HttpGet("GestionarPermiso/IUsuario/{id}")]
+        [HttpGet("Usuario/{id}")]
         public async Task<ActionResult<IEnumerable<UsuarioVerPermisosViewModel>>> GestionarPermisos(string id)
         {
             Usuario user = await _userManager.FindByIdAsync(id);
@@ -81,10 +81,10 @@ namespace BibliotecaOtacaAglr.Controllers.Permisos
                 permisos_agregar.Permisos.Add(permisos);
             }
 
-            return Ok(permisos_agregar);
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = permisos_agregar });
         }
 
-        [HttpPost("GestionarPermiso")]
+        [HttpPost("Usuario")]
         public async Task<ActionResult<IEnumerable<UsuarioVerPermisosViewModel>>> GestionarPermisos([FromBody] UsuarioVerPermisosViewModel model)
         {
             Usuario usuario = await _userManager.FindByIdAsync(model.IdUsuario);
@@ -122,7 +122,7 @@ namespace BibliotecaOtacaAglr.Controllers.Permisos
                 return BadRequest(new ApiResponseFormat() { Estado = StatusCodes.Status400BadRequest, Mensaje = "No se pueden agregar permisos al usuario" });
             }
 
-            return CreatedAtAction("GestionarPermisos", new { id = model.IdUsuario }, usuario);
+            return StatusCode(StatusCodes.Status201Created, new ApiResponseFormat() { Estado = StatusCodes.Status201Created, Mensaje = "Permisos editados con exito", Dato = usuario });
         }
     }
 }
