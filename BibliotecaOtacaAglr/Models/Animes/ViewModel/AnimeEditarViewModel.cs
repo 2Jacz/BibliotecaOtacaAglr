@@ -1,6 +1,7 @@
 ﻿using BibliotecaOtacaAglr.Models.Anime_Episodios.Entity;
 using BibliotecaOtacaAglr.Models.Generos.ViewModel;
 using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -16,32 +17,43 @@ namespace BibliotecaOtacaAglr.Models.Animes.ViewModel
         /// </summary>
         [Key]
         public int AnimeId { get; set; }
+
         /// <summary>
         /// Descripcion del anime
         /// </summary>
         [Required]
         public string Nombre { get; set; }
+
         /// <summary>
         /// Descripcion del anime
         /// </summary>
         [Required]
         [DataType(DataType.Text)]
         public string Descripcion { get; set; }
+
+        /// <summary>
+        /// Fecha de publicacion del anime
+        /// </summary>
+        public DateTime Fecha_publicacion { get; set; }
+
         /// <summary>
         /// Portada del anime
         /// </summary>
         public IFormFile Portada { get; set; }
+
         /// <summary>
         /// Numero de episodios del anime
         /// </summary>
         [Required]
         [Display(Name = "Numero de episodios")]
         public int Numero_episodios { get; set; }
+
         /// <summary>
         /// Generos del anime
         /// </summary>
         [Display(Name = "Generos")]
         public List<GeneroAsignadoViewModel> GenerosActivos { get; set; }
+
         /// <summary>
         /// Generos del anime
         /// </summary>

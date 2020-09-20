@@ -3,7 +3,7 @@ using System.Security.Claims;
 
 namespace BibliotecaOtacaAglr.Models.Roles.ViewModel
 {
-    public class RolPermisoEditarViewModel
+    public class RolAdministrarPermisosViewModel
     {
         public string Id { get; set; }
 
@@ -14,7 +14,7 @@ namespace BibliotecaOtacaAglr.Models.Roles.ViewModel
         /// </summary>
         public IList<Claim> Permisos { get; set; }
 
-        public RolPermisoEditarViewModel()
+        public RolAdministrarPermisosViewModel()
         {
             Permisos = new List<Claim>();
         }

@@ -1,5 +1,6 @@
 ﻿using BibliotecaOtacaAglr.Models.Anime_Episodios.Entity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BibliotecaOtacaAglr.Models.Anime_Episodios_Servidores
 {
@@ -12,20 +13,22 @@ namespace BibliotecaOtacaAglr.Models.Anime_Episodios_Servidores
         /// Identificador del episodio
         /// </summary>
         [Key]
-        public int Id { get; set; }
+        public int ServidorId { get; set; }
         /// <summary>
         /// Url donde esta alojado el capitulo
         /// </summary>
-        [Required(ErrorMessageResourceName = "URL requerida")]
+        [Required(ErrorMessageResourceName = "URL donde esta alojado el episodio requerida")]
         public string Enlace { get; set; }
         /// <summary>
         /// Relacion con el episodio al que pertenecera la url
         /// </summary>
-        public int Anime_EpisodioId { get; set; }
+        [ForeignKey("Anime_Episodio")]
+        public int EpisodioId { get; set; }
 
         /// <summary>
         /// Instancia del episodio al que pertenecera la url (o navegacion)
         /// </summary>
+        [Required]
         public Anime_Episodio Anime_Episodio { get; set; }
     }
 }

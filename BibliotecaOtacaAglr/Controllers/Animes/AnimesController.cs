@@ -51,7 +51,7 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
                 Pagina = animePaginador
             };
 
-            return Ok(ListaAnimes);
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = ListaAnimes });
         }
 
         // GET: api/Animes/5
@@ -66,7 +66,7 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
                 return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = "Anime no encontrado" });
             }
 
-            return Ok(anime);
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = anime });
         }
 
         // PUT: api/Animes/Editar/5
@@ -84,6 +84,7 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
             modificado.Nombre = anime.Nombre;
             modificado.Numero_episodios = anime.Numero_episodios;
             modificado.Descripcion = anime.Descripcion;
+            modificado.Fecha_publicacion = anime.Fecha_publicacion;
 
             if (anime.Portada != null)
             {
@@ -123,7 +124,9 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
             {
                 Descripcion = anime.Descripcion,
                 Nombre = anime.Nombre,
-                Numero_episodios = anime.Numero_episodios
+                Numero_episodios = anime.Numero_episodios,
+                Fecha_publicacion = anime.Fecha_publicacion,
+                Fecha_subida = DateTime.UtcNow
             };
 
             await AniadirGeneros(nuevo, anime.GenerosActivos.Where(ga => ga.Activo).Select(ga => ga.Genero).ToList());
@@ -143,11 +146,11 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
             {
                 _context.Animes.Add(nuevo);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction("ObtenerAnime", new { animeId = nuevo.AnimeId }, nuevo);
+                return StatusCode(StatusCodes.Status201Created, new ApiResponseFormat() { Estado = StatusCodes.Status201Created, Dato = nuevo });
             }
             catch (Exception ex)
             {
-                return StatusCode(ex.HResult, new ApiResponseFormat() { Estado = StatusCodes.Status406NotAcceptable, Mensaje = ex.Message, Dato = anime });
+                return BadRequest(new ApiResponseFormat() { Estado = StatusCodes.Status406NotAcceptable, Mensaje = ex.Message, Dato = anime });
             }
         }
 
@@ -169,7 +172,7 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
             }
             catch (Exception ex)
             {
-                return StatusCode(ex.HResult, new ApiResponseFormat() { Estado = StatusCodes.Status304NotModified, Mensaje = ex.Message, Dato = anime });
+                return BadRequest(new ApiResponseFormat() { Estado = StatusCodes.Status304NotModified, Mensaje = ex.Message, Dato = anime });
             }
         }
 
@@ -200,7 +203,7 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
                     generos_agregar.Add(new Anime_Genero()
                     {
                         Anime = anime,
-                        Genero = await _context.Generos.FindAsync(genero.ID)
+                        Genero = await _context.Generos.FindAsync(genero.GeneroId)
                     });
                 }
 

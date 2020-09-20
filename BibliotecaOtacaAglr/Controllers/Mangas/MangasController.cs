@@ -199,7 +199,7 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
                     generos_agregar.Add(new Manga_Genero()
                     {
                         Manga = manga,
-                        Genero = await _context.Generos.FindAsync(genero.ID)
+                        Genero = await _context.Generos.FindAsync(genero.GeneroId)
                     });
                 }
 

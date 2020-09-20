@@ -12,12 +12,14 @@ namespace BibliotecaOtacaAglr.Models.Permisos.Entity
         /// Identificador del permiso
         /// </summary>
         [Key]
-        public int Id { get; set; }
+        public int PermisoId { get; set; }
+
         /// <summary>
         /// Nombre del permiso
         /// </summary>
         [Required]
         public string Tipo { get; set; }
+
         /// <summary>
         /// Descripcion del permiso
         /// </summary>
@@ -26,9 +28,9 @@ namespace BibliotecaOtacaAglr.Models.Permisos.Entity
 
         public Permiso() { }
 
-        public Permiso(int id, string tipo, string valor)
+        public Permiso(int permisoid, string tipo, string valor)
         {
-            Id = id;
+            PermisoId = permisoid;
             Tipo = tipo;
             Valor = valor;
         }

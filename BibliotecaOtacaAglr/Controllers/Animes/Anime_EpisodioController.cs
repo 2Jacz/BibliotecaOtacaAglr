@@ -35,7 +35,9 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
                 return BadRequest(new ApiResponseFormat() { Estado = StatusCodes.Status400BadRequest, Mensaje = "Proporcione un anime para ver sus capitulos" });
             }
 
-            return Ok(await _context.Anime_Episodios.Where(ae => ae.AnimeId == animeId).Include(a => a.UrlServidores).Include(a => a.Anime).ToListAsync());
+            List<Anime_Episodio> episodios = await _context.Anime_Episodios.Where(ae => ae.AnimeId == animeId).Include(a => a.UrlServidores).Include(a => a.Anime).ToListAsync();
+
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = episodios });
         }
 
         // GET: api/Anime/{animeId}/Episodio/5
@@ -58,20 +60,20 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
                 else
                 {
                     //trae la lista de episodios del anime ordenado por numero de cap
-                    episodios = await _context.Anime_Episodios.Where(ae => ae.AnimeId == animeId).Include(a => a.UrlServidores).Include(c => c.Anime).OrderBy(ae => ae.Numero_capitulo).ToListAsync();
-                    episodios_navigation.Ep_actual = _context.Anime_Episodios.Where(e => e.Numero_capitulo == numeroEpisodio && e.AnimeId == animeId).First();
+                    episodios = await _context.Anime_Episodios.Where(ae => ae.AnimeId == animeId).Include(a => a.UrlServidores).Include(c => c.Anime).OrderBy(ae => ae.Numero_episodio).ToListAsync();
+                    episodios_navigation.Ep_actual = _context.Anime_Episodios.Where(e => e.Numero_episodio == numeroEpisodio && e.AnimeId == animeId).First();
                 }
             }
             else
             {
                 //busca el cap especifico por id
-                episodios_navigation.Ep_actual = await _context.Anime_Episodios.FirstAsync(e => e.ID == episodioid);
+                episodios_navigation.Ep_actual = await _context.Anime_Episodios.FirstAsync(e => e.EpisodioId == episodioid);
 
                 //verifica si existe
                 if (episodios_navigation.Ep_actual != null)
                 {
                     //llena la lista con los caps del anime del capitulo buscado ordenado por numero de cap
-                    episodios = await _context.Anime_Episodios.Where(ae => ae.AnimeId == episodios_navigation.Ep_actual.AnimeId).Include(c => c.Anime).OrderBy(ae => ae.Numero_capitulo).ToListAsync();
+                    episodios = await _context.Anime_Episodios.Where(ae => ae.AnimeId == episodios_navigation.Ep_actual.AnimeId).Include(c => c.Anime).OrderBy(ae => ae.Numero_episodio).ToListAsync();
                 }
             }
 
@@ -86,31 +88,31 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
                 episodios_navigation.Ep_anterior = (i == 0) ? null : episodios[i - 1];
                 episodios_navigation.Ep_siguiente = (i == episodios.Count() - 1) ? null : episodios[i + 1];
 
-                if (episodios[i].ID == episodios_navigation.Ep_actual.ID) break;
+                if (episodios[i].EpisodioId == episodios_navigation.Ep_actual.EpisodioId) break;
             }
 
-            episodios_navigation.Primer_ep = episodios.First().Numero_capitulo; //primer cap de la lista
-            episodios_navigation.Ultimo_ep = episodios.Last().Numero_capitulo; //ultimo cap de la lista
+            episodios_navigation.Primer_ep = episodios.First().Numero_episodio; //primer cap de la lista
+            episodios_navigation.Ultimo_ep = episodios.Last().Numero_episodio; //ultimo cap de la lista
 
-            return Ok(episodios_navigation);
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = episodios_navigation });
         }
 
         // PUT: api/Anime/{animeId}/Episodio/Modificar/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("Modificar/{id}")]
-        public async Task<IActionResult> ModificarAnime_Episodio(int id, [FromBody] Anime_EpisodioEditarViewModel anime_Episodio)
+        public async Task<ActionResult<Anime_Episodio>> ModificarAnime_Episodio(int id, [FromBody] Anime_EpisodioEditarViewModel anime_Episodio)
         {
-            if (id != anime_Episodio.Id)
+            if (id != anime_Episodio.EpisodioId)
             {
                 return BadRequest(new ApiResponseFormat() { Estado = StatusCodes.Status400BadRequest, Mensaje = "Identificador de episodio invalido" });
             }
 
-            Anime_Episodio editado = _context.Anime_Episodios.Include(a => a.UrlServidores).Include(e => e.Anime).FirstOrDefault(e => e.ID == anime_Episodio.Id);
+            Anime_Episodio editado = _context.Anime_Episodios.Include(a => a.UrlServidores).Include(e => e.Anime).FirstOrDefault(e => e.EpisodioId == anime_Episodio.EpisodioId);
             anime_Episodio.Anime = editado.Anime;
 
-            editado.Titulo_capitulo = anime_Episodio.Titulo_capitulo;
-            editado.Numero_capitulo = anime_Episodio.Numero_capitulo;
+            editado.Titulo_episodio = anime_Episodio.Titulo_episodio;
+            editado.Numero_episodio = anime_Episodio.Numero_episodio;
             editado.UrlServidores = anime_Episodio.UrlServidores;
 
             if (!string.IsNullOrEmpty(anime_Episodio.Nombre_Archivo))
@@ -142,13 +144,22 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost("Agregar")]
-        public async Task<ActionResult<Anime_Episodio>> CrearAnime_Episodio([FromBody] Anime_Episodio anime_Episodio)
+        public async Task<ActionResult<Anime_Episodio>> CrearAnime_Episodio([FromBody] Anime_EpisodioCrearViewModel anime_Episodio)
         {
             try
             {
-                _context.Anime_Episodios.Add(anime_Episodio);
+                Anime_Episodio newep = new Anime_Episodio()
+                {
+                    AnimeId = anime_Episodio.AnimeId,
+                    Fecha_subida = DateTime.UtcNow,
+                    Nombre_archivo = anime_Episodio.Nombre_Archivo,
+                    Numero_episodio = anime_Episodio.Numero_episodio,
+                    Titulo_episodio = anime_Episodio.Titulo_episodio,
+                    UrlServidores = anime_Episodio.UrlServidores
+                };
+                _context.Anime_Episodios.Add(newep);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction("ObtenerAnime_Episodio", new { id = anime_Episodio.ID }, anime_Episodio);
+                return StatusCode(StatusCodes.Status201Created, new ApiResponseFormat() { Estado = StatusCodes.Status201Created, Mensaje = "Episodio creado exitosamente", Dato = newep });
             }
             catch (Exception ex)
             {
@@ -183,7 +194,7 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
 
         private bool Anime_EpisodioExists(int id)
         {
-            return _context.Anime_Episodios.Any(e => e.ID == id);
+            return _context.Anime_Episodios.Any(e => e.EpisodioId == id);
         }
     }
 }

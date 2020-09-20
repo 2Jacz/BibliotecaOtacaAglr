@@ -39,7 +39,8 @@ namespace BibliotecaOtacaAglr.Controllers.Usuarios
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Usuario>>> ListaUsuarios()
         {
-            return Ok(await _userManager.Users.ToListAsync());
+            List<Usuario> usuarios = await _userManager.Users.ToListAsync();
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = usuarios });
         }
 
         // GET api/Usuarios/5
@@ -59,7 +60,7 @@ namespace BibliotecaOtacaAglr.Controllers.Usuarios
                 return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = "IUsuario no encontrado" });
             }
 
-            return Ok(usuario);
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = usuario });
         }
 
         // PUT api/Usuarios/Editar/example@example.net
@@ -112,7 +113,7 @@ namespace BibliotecaOtacaAglr.Controllers.Usuarios
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                return StatusCode(ex.HResult, new ApiResponseFormat() { Estado = ex.HResult, Mensaje = ex.Message });
+                return BadRequest(new ApiResponseFormat() { Estado = ex.HResult, Mensaje = ex.Message });
             }
         }
 

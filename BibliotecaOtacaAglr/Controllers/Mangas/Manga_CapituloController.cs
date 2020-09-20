@@ -30,7 +30,8 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Manga_Capitulo>>> GetManga_Capitulos(int mangaid)
         {
-            return Ok(await _context.Manga_Capitulos.Where(mc => mc.MangaId == mangaid).ToListAsync());
+            List<Manga_Capitulo> capitulos = await _context.Manga_Capitulos.Where(mc => mc.MangaId == mangaid).ToListAsync();
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = capitulos });
         }
 
         // GET: api/Manga/5/Capitulos/5
@@ -38,7 +39,7 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
         [AllowAnonymous]
         public async Task<ActionResult<Manga_Capitulo>> ObtenerManga_Capitulo(int? capituloid, int? numcap, int? mangaId)
         {
-            List<Manga_Capitulo> capitulos = await _context.Manga_Capitulos.Where(m => m.MangaId == mangaId).Include(c => c.Manga).Include(c => c.Paginas).OrderBy(e => e.Num_capitulo).ToListAsync();
+            List<Manga_Capitulo> capitulos = await _context.Manga_Capitulos.Where(m => m.MangaId == mangaId).Include(c => c.Manga).Include(c => c.Paginas).OrderBy(e => e.Numero_capitulo).ToListAsync();
             Manga_CapituloNavegacionViewModel capitulo = new Manga_CapituloNavegacionViewModel();
 
             if (capituloid == null)
@@ -49,12 +50,12 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
                 }
                 else
                 {
-                    capitulo.Cap_actual = capitulos.Where(e => e.Num_capitulo == numcap).First();
+                    capitulo.Cap_actual = capitulos.Where(e => e.Numero_capitulo == numcap).First();
                 }
             }
             else
             {
-                capitulo.Cap_actual = capitulos.First(c => c.ID == capituloid);
+                capitulo.Cap_actual = capitulos.First(c => c.CapituloId == capituloid);
             }
 
             if (capitulo == null || capitulo.Cap_actual == null)
@@ -69,13 +70,13 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
                 capitulo.Cap_anterior = (i == 0) ? null : capitulos[i - 1];
                 capitulo.Cap_siguiente = (i == capitulos.Count() - 1) ? null : capitulos[i + 1];
 
-                if (capitulos[i].ID == capitulo.Cap_actual.ID) break;
+                if (capitulos[i].CapituloId == capitulo.Cap_actual.CapituloId) break;
             }
 
-            capitulo.Cap_inicial = capitulos.First().Num_capitulo;
-            capitulo.Cap_final = capitulos.Last().Num_capitulo;
+            capitulo.Cap_inicial = capitulos.First().Numero_capitulo;
+            capitulo.Cap_final = capitulos.Last().Numero_capitulo;
 
-            return Ok(capitulo);
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = capitulo });
         }
 
         // PUT: api/Manga/5/Capitulos/Editar/5
@@ -90,15 +91,16 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
             }
 
             Manga_Capitulo editado = _context.Manga_Capitulos.Find(id);
-            editado.Nombre = manga.Nombre;
-            editado.Num_capitulo = manga.Num_capitulo;
+            editado.Nombre_capitulo = manga.Nombre_capitulo;
+            editado.Numero_capitulo = manga.Numero_capitulo;
+            editado.Fecha_publicacion = manga.Fecha_publicacion;
 
             _context.Entry(editado).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
-                return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Mensaje = $"Capitulo {editado.Nombre} editado con exito", Dato = editado });
+                return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Mensaje = $"Capitulo {editado.Nombre_capitulo} editado con exito", Dato = editado });
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -119,16 +121,21 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
         [HttpPost("Agregar")]
         public async Task<ActionResult<Manga_Capitulo>> AgregarManga_Capitulo(int mangaid, [FromBody] Manga_CapituloCrearViewModel manga)
         {
-            Manga_Capitulo newmangacap = new Manga_Capitulo();
-            newmangacap.Nombre = manga.Nombre;
-            newmangacap.Num_capitulo = manga.Num_capitulo;
-            newmangacap.Manga = await _context.Mangas.FindAsync(mangaid);
+            Manga_Capitulo newmangacap = new Manga_Capitulo()
+            {
+                Nombre_capitulo = manga.Nombre_capitulo,
+                Numero_capitulo = manga.Numero_capitulo,
+                Fecha_publicacion = manga.Fecha_publicacion,
+                Fecha_subida = DateTime.UtcNow,
+                Manga = await _context.Mangas.FindAsync(mangaid),
+                MangaId = manga.MangaId
+            };
 
             try
             {
                 _context.Manga_Capitulos.Add(newmangacap);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction("ObtenerManga_Capitulo", new { id = newmangacap.ID, mangaid = newmangacap.MangaId }, newmangacap);
+                return StatusCode(StatusCodes.Status201Created, new ApiResponseFormat() { Estado = StatusCodes.Status201Created, Dato = newmangacap });
             }
             catch (Exception ex)
             {
@@ -160,7 +167,7 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
 
         private bool Manga_CapituloExists(int id)
         {
-            return _context.Manga_Capitulos.Any(e => e.ID == id);
+            return _context.Manga_Capitulos.Any(e => e.CapituloId == id);
         }
     }
 }

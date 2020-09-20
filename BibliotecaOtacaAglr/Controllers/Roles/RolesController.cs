@@ -37,28 +37,8 @@ namespace BibliotecaOtacaAglr.Controllers.Roles
         [HttpGet("Listar")]
         public async Task<ActionResult> ListarRoles()
         {
-            return Ok(await _roleManager.Roles.ToListAsync());
-        }
-
-        [HttpGet("ListarUsuario")]
-        [Authorize(Roles = "Usuario")]
-        public ActionResult ListarRoles2()
-        {
-            return Ok("eres usuario");
-        }
-
-        [HttpGet("ListarAdministrador")]
-        [Authorize(Roles = "Administrador")]
-        public ActionResult ListarRoles3()
-        {
-            return Ok("eres admin");
-        }
-
-        [HttpGet("ListarUploader")]
-        [Authorize(Roles = "Uploader")]
-        public ActionResult ListarRoles4()
-        {
-            return Ok("eres uploader");
+            var roles = await _roleManager.Roles.ToListAsync();
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = roles });
         }
 
         // GET: api/Roles/Agregar
@@ -110,12 +90,12 @@ namespace BibliotecaOtacaAglr.Controllers.Roles
 
             var rolyusuarios = new RolViewModel { Rol = role, Asignados = members, NoAsignados = nonMembers, Permisos = await _roleManager.GetClaimsAsync(role) };
 
-            return Ok(rolyusuarios);
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = rolyusuarios });
         }
 
-        // PUT: api/Roles/AdministrarUsuarios
-        [HttpPut("AdministrarUsuariosRol")]
-        public async Task<ActionResult> AsignarUsuariosAlRol([FromBody][Bind("Rol_Id,Rol_Nombre,AniadirUsuariosIds,EliminarUsuariosIds")] RolAsignarUsuariosViewModel model)
+        // PUT: api/Roles/Gestionar-Usuarios
+        [HttpPut("Gestionar-Usuarios")]
+        public async Task<ActionResult> AsignarUsuariosAlRol([FromBody][Bind("Rol_Id,Rol_Nombre,AniadirUsuariosIds,EliminarUsuariosIds")] RolAdministrarUsuariosViewModel model)
         {
             if (string.IsNullOrEmpty(model.Rol_Id) || string.IsNullOrEmpty(model.Rol_Nombre))
             {
@@ -159,8 +139,8 @@ namespace BibliotecaOtacaAglr.Controllers.Roles
             return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Mensaje = "Usuarios asignados con exito", Dato = rol });
         }
 
-        // GET: api/Roles/OntenerPermisosRol/5
-        [HttpGet("OntenerPermisosRol/{id}")]
+        // GET: api/Roles/OntenerPermisos/5
+        [HttpGet("Ontener-Permisos/{id}")]
         public async Task<ActionResult> GestionarPermisos(string id)
         {
             IdentityRole rol = await _roleManager.FindByIdAsync(id);
@@ -193,11 +173,11 @@ namespace BibliotecaOtacaAglr.Controllers.Roles
                 rolConPermisos.Permisos.Add(permisos);
             }
 
-            return Ok(rolConPermisos);
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = rolConPermisos });
         }
 
-        // PUT: api/Roles/AdministrarPermisosRol
-        [HttpPut("AdministrarPermisosRol")]
+        // PUT: api/Roles/Administrar-Permisos
+        [HttpPut("Administrar-Permisos")]
         public async Task<IActionResult> GestionarPermisos([FromBody] RolPermisoVerViewModel model)
         {
             IdentityRole rol = await _roleManager.FindByIdAsync(model.IdRol);
@@ -208,7 +188,6 @@ namespace BibliotecaOtacaAglr.Controllers.Roles
             }
 
             var permisos_activos = await _roleManager.GetClaimsAsync(rol);
-
 
             try
             {
@@ -260,12 +239,12 @@ namespace BibliotecaOtacaAglr.Controllers.Roles
                 }
                 else
                 {
-                    return BadRequest();
+                    return BadRequest(new ApiResponseFormat() { Estado = StatusCodes.Status400BadRequest, Mensaje = $"No se pudo eliminar el rol {rol.Name}" });
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(ex.HResult, new ApiResponseFormat() { Estado = StatusCodes.Status304NotModified, Mensaje = ex.Message });
+                return BadRequest(new ApiResponseFormat() { Estado = StatusCodes.Status304NotModified, Mensaje = ex.Message });
             }
         }
     }

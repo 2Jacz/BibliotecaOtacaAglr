@@ -1,5 +1,6 @@
 ﻿using BibliotecaOtacaAglr.Models.Manga_Capitulo_Paginas.Entity;
 using BibliotecaOtacaAglr.Models.Mangas.Entity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,12 +16,23 @@ namespace BibliotecaOtacaAglr.Models.Manga_Capitulos.ViewModel
         /// Nombre del capitulo
         /// </summary>
         [Required]
-        public string Nombre { get; set; }
+        public string Nombre_capitulo { get; set; }
+
         /// <summary>
         /// Numero de capitulo
         /// </summary>
         [Display(Name = "Numero del capitulo")]
         [Required]
-        public double Num_capitulo { get; set; }
+        public double Numero_capitulo { get; set; }
+
+        /// <summary>
+        /// Fecha de subida del ep
+        /// </summary>
+        public DateTime Fecha_subida { get; set; }
+
+        /// <summary>
+        /// Fecha de publicacion del ep
+        /// </summary>
+        public DateTime Fecha_publicacion { get; set; }
     }
 }

@@ -14,16 +14,19 @@ namespace BibliotecaOtacaAglr.Models.Generos.Entity
         /// Identificador del genero
         /// </summary>
         [Key]
-        public int ID { get; set; }
+        public int GeneroId { get; set; }
+
         /// <summary>
         /// Nombre del genero
         /// </summary>
         [Required]
         public string Nombre { get; set; }
+
         /// <summary>
         /// Relacion con los animes que tengan ese genero
         /// </summary>
         public List<Anime_Genero> Animes { get; set; }
+
         /// <summary>
         /// Relacion con los mangas que tengan ese genero
         /// </summary>

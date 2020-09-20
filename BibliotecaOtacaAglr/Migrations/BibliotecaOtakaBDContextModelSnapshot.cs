@@ -29,6 +29,9 @@ namespace BibliotecaOtacaAglr.Migrations
                     b.Property<int>("AnimeId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("Fecha_subida")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Nombre_archivo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -78,6 +81,12 @@ namespace BibliotecaOtacaAglr.Migrations
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Fecha_publicacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Fecha_subida")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -191,6 +200,9 @@ namespace BibliotecaOtacaAglr.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("Fecha_subida")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("MangaId")
                         .HasColumnType("int");
 
@@ -218,6 +230,12 @@ namespace BibliotecaOtacaAglr.Migrations
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Fecha_publicacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Fecha_subida")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -496,13 +514,13 @@ namespace BibliotecaOtacaAglr.Migrations
                         {
                             Id = "f5b93248-10dd-40fb-a317-12b24d190a3c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b47a7e17-149f-4b1e-b960-3190e6e2da08",
+                            ConcurrencyStamp = "bbb2153c-6588-4792-8420-8d6e6b6687bf",
                             Email = "example@example.net",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "EXAMPLE@EXAMPLE.NET",
                             NormalizedUserName = "MAD0",
-                            PasswordHash = "AQAAAAEAACcQAAAAELGRyCmF14Zt1EkGIv0aWcTuxHmXWBDmBX/nNJLUuT6GW+2UH/yJy1+irCLtjzD9qw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELBMC+CUVKpMZa28Dfo8Dy0FzxG/gALIH+J+3BdBVJkJXCtLHn3cBko1kVclxiQTYg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "76d7c417-6c39-45db-8963-304f80f361e0",
                             TwoFactorEnabled = false,
@@ -512,13 +530,13 @@ namespace BibliotecaOtacaAglr.Migrations
                         {
                             Id = "6d435a04-1bb0-4c7e-874d-edb7d25f41fc",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e8afaac8-3367-4ee9-97da-3166ee989d53",
+                            ConcurrencyStamp = "2eedade6-aecc-451e-bbc6-c6ab3f8c998e",
                             Email = "Kotori@onee.chan",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "KOTORI@ONEE.CHAN",
                             NormalizedUserName = "KOTORI",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKe5/X/CJ6VndpKHpX+9wI/7WL0irVnPUXLuKoXtYwP4v5QAElAYHyJmGak1JIHuZw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELtP8HPlK7pce0e78tkbhCvo4xv+0lM6brpAMrHLNqoo4gf1wLNFkVyQldsAq7RxWw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "59e210b1-d92e-45a9-8cd4-c7837a01e691",
                             TwoFactorEnabled = false,
@@ -528,13 +546,13 @@ namespace BibliotecaOtacaAglr.Migrations
                         {
                             Id = "0d304ebd-9b85-49bb-83ea-3313f534a865",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6a6614b1-a9f3-434d-80cf-f3f616b5893e",
+                            ConcurrencyStamp = "403c2939-a7cd-4ab3-9ea9-bd4600350ff4",
                             Email = "Kaoru@onee.sama",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "KAORU@ONEE.SAMA",
                             NormalizedUserName = "KAORU",
-                            PasswordHash = "AQAAAAEAACcQAAAAECm4SAMFVpcEkBM2uJc/jJfzqR07XumO38K49n2HYMLUbV0ISo4sHn0uwvdZIJ5eqA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJ8E8C4FWPT27KfnHEtSefmp50DrhPMhZysAh6m4g8wlcG0WGOpyzLtA5vt8i6basQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "1e12009b-3b10-4a73-ba28-57ae3323ad5f",
                             TwoFactorEnabled = false,
@@ -572,21 +590,21 @@ namespace BibliotecaOtacaAglr.Migrations
                         new
                         {
                             Id = "8e8ddcce-fe93-4563-be09-de9620c7e5e3",
-                            ConcurrencyStamp = "532ed60c-aaf4-43e3-b3e5-dfbe439e7742",
+                            ConcurrencyStamp = "462c55a2-3eb2-438c-87d1-a1b208a2fc1e",
                             Name = "Administrador",
                             NormalizedName = "ADMINISTRADOR"
                         },
                         new
                         {
                             Id = "0224e393-55a4-4211-97d4-a4b9f5052609",
-                            ConcurrencyStamp = "ebe41fd7-0f48-4838-9b89-cc530c679193",
+                            ConcurrencyStamp = "6c88030a-533e-4c7e-8fb7-f95ca9ec0585",
                             Name = "Uploader",
                             NormalizedName = "UPLOADER"
                         },
                         new
                         {
                             Id = "fbe82cec-a56e-40c3-afb1-60b8bd38b611",
-                            ConcurrencyStamp = "1552672b-1ba3-4122-8eb4-b4a0ad09689a",
+                            ConcurrencyStamp = "ef2e1578-ed74-44ff-8d50-b2d3451890d8",
                             Name = "Usuario",
                             NormalizedName = "USUARIO"
                         });
