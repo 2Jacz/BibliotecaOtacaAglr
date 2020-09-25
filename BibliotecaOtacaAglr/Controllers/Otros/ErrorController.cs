@@ -17,8 +17,7 @@ namespace BibliotecaOtacaAglr.Controllers.Otros
         {
             if (webHostEnvironment.EnvironmentName != "Development")
             {
-                throw new InvalidOperationException(
-                    "This shouldn't be invoked in non-development environments.");
+                throw new InvalidOperationException("This shouldn't be invoked in non-development environments.");
             }
 
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();

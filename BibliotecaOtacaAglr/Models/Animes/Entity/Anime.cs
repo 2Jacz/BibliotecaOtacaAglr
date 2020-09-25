@@ -1,7 +1,11 @@
 ﻿using BibliotecaOtacaAglr.Models.Anime_Episodios.Entity;
+using BibliotecaOtacaAglr.Models.Generos.Entity;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace BibliotecaOtacaAglr.Models.Animes.Entity
 {
@@ -30,14 +34,14 @@ namespace BibliotecaOtacaAglr.Models.Animes.Entity
         public string Descripcion { get; set; }
 
         /// <summary>
-        /// Fecha de publicacion del anime
-        /// </summary>
-        public DateTime Fecha_publicacion { get; set; }
-
-        /// <summary>
         /// Imagen de portada en arreglo de bytes del anime
         /// </summary>
         public byte[] Portada { get; set; }
+
+        /// <summary>
+        /// Fecha de publicacion del anime
+        /// </summary>
+        public DateTime Fecha_publicacion { get; set; }
 
         /// <summary>
         /// Numero de episodios que tiene el anime (no incluir OVA ni peliculas)
@@ -55,7 +59,11 @@ namespace BibliotecaOtacaAglr.Models.Animes.Entity
         /// <summary>
         /// Relacion con Generos M:M (generos que tiene asignado el anime)
         /// </summary>
+        [JsonIgnore]
         public List<Anime_Genero> Generos { get; set; }
+
+        [NotMapped]
+        public IList<Genero> ListaGeneros => Generos.Select(m => m.Genero).ToList();
 
         /// <summary>
         /// Relacion con Generos 1:M (episodios que tiene asignado el anime)

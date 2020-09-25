@@ -32,6 +32,11 @@ namespace BibliotecaOtacaAglr.Models.Mangas.ViewModel
         public DateTime Fecha_publicacion { get; set; }
 
         /// <summary>
+        /// Fecha de subida del anime
+        /// </summary>
+        public DateTime Fecha_subida { get; set; }
+
+        /// <summary>
         /// Portada del manga en arreglo de bytes
         /// </summary>
         public IFormFile Portada { get; set; }

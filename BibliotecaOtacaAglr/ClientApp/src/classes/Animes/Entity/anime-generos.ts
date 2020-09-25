@@ -2,9 +2,9 @@ import { Genero } from 'src/classes/Generos/Entity/genero';
 import { Anime } from './anime';
 
 export class AnimeGeneros {
-  public AnimeId: number;
-  public Anime: Anime;
+  public animeId: number;
+  public anime: Anime;
 
-  public GeneroId: number;
-  public Genero: Genero;
+  public generoId: number;
+  public genero: Genero;
 }

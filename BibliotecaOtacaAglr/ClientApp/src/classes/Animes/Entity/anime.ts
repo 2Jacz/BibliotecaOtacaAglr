@@ -2,13 +2,13 @@ import { AnimeEpisodios } from 'src/classes/Anime_Episodios/Entity/anime-episodi
 import { AnimeGeneros } from './anime-generos';
 
 export class Anime {
-  public AnimeId: number;
-  public Nombre: string;
-  public Descripcion: string;
-  public Fecha_publicacion: Date;
-  public Portada: any;
-  public Numero_Episodios: number;
-  public Fecha_subida: Date;
-  public Generos: AnimeGeneros[];
-  public Episosdios: AnimeEpisodios[];
+  public animeId: number;
+  public nombre: string;
+  public descripcion: string;
+  public fecha_publicacion: Date;
+  public portada: any;
+  public numero_episodios: number;
+  public fecha_subida: Date;
+  public generos: AnimeGeneros[];
+  public episodios: AnimeEpisodios[];
 }

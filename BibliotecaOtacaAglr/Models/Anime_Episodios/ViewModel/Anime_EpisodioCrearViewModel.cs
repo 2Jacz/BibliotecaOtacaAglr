@@ -32,6 +32,7 @@ namespace BibliotecaOtacaAglr.Models.Anime_Episodios.ViewModel
         /// <summary>
         /// Relacion con el anime
         /// </summary>
+        [Required]
         public int AnimeId { get; set; }
 
         /// <summary>

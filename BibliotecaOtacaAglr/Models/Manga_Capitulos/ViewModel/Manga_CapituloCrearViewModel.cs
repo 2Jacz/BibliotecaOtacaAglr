@@ -43,6 +43,7 @@ namespace BibliotecaOtacaAglr.Models.Manga_Capitulos.ViewModel
         /// Relacion con el manga al que pertenece el capitulo
         /// </summary>
         [ForeignKey("Manga")]
+        [Required]
         public int MangaId { get; set; }
 
         /// <summary>

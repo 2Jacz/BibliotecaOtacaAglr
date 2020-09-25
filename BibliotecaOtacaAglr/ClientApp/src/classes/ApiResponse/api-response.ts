@@ -1,5 +1,5 @@
 export class ApiResponse {
-  public Estado: number;
-  public Mensaje: string;
-  public Datos: any;
+  public estado: number;
+  public mensaje: string;
+  public dato: any;
 }

@@ -12,7 +12,6 @@ using BibliotecaOtacaAglr.Models.Mangas.ViewModel;
 using BibliotecaOtacaAglr.Models.Others.Entity.ApiResponse;
 using BibliotecaOtacaAglr.Models.Generos.Entity;
 using System.IO;
-using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Authorization;
 
 namespace BibliotecaOtacaAglr.Controllers.Mangas
@@ -37,11 +36,11 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
 
             if (!string.IsNullOrEmpty(buscar))
             {
-                ListaMangas = await _context.Mangas.Where(a => a.Nombre.Contains(buscar)).Include(a => a.Generos).ThenInclude(g => g.Genero).Include(a => a.Capitulos).ToListAsync();
+                ListaMangas = await _context.Mangas.Where(a => a.Nombre.Contains(buscar)).ToListAsync();
             }
             else
             {
-                ListaMangas = await _context.Mangas.Include(a => a.Generos).ThenInclude(g => g.Genero).Include(a => a.Capitulos).ToListAsync();
+                ListaMangas = await _context.Mangas.ToListAsync();
             }
 
             Paginado animePaginador = new Paginado(ListaMangas.Count(), pagina);
@@ -51,7 +50,7 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
                 Pagina = animePaginador
             };
 
-            return Ok(mangaspaginados);
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = mangaspaginados });
         }
 
         // GET: api/Mangas/5
@@ -70,7 +69,7 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
                 return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = "Manga no encontrado" });
             }
 
-            return Ok(mangas);
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = mangas });
         }
 
         // PUT: api/Mangas/Editar/5
@@ -78,16 +77,17 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("Editar/{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> Edit(int mangaId, [FromBody][Bind("mangaId,Nombre,Descripcion,Portada,Generos_Ids")] MangaEditarViewModel mangas)
+        public async Task<IActionResult> Edit(int mangaId, [FromBody] MangaEditarViewModel mangas)
         {
-            if (mangaId != mangas.Id)
+            if (mangaId != mangas.mangaId)
             {
                 return NotFound(new ApiResponseFormat() { });
             }
 
-            Manga editado = await _context.Mangas.Include(m => m.Generos).ThenInclude(g => g.Genero).Include(m => m.Capitulos).FirstOrDefaultAsync(a => a.MangaId == mangas.Id);
+            Manga editado = await _context.Mangas.Include(m => m.Generos).ThenInclude(g => g.Genero).Include(m => m.Capitulos).FirstOrDefaultAsync(a => a.MangaId == mangas.mangaId);
             editado.Nombre = mangas.Nombre;
             editado.Descripcion = mangas.Descripcion;
+            editado.Fecha_publicacion = mangas.Fecha_publicacion;
 
             if (mangas.Portada != null)
             {
@@ -107,7 +107,7 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                if (!MangaExists(mangas.Id))
+                if (!MangaExists(mangas.mangaId))
                 {
                     return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = "Manga invalido" });
                 }
@@ -123,12 +123,14 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost("Agregar")]
         [AllowAnonymous]
-        public async Task<IActionResult> AgregarManga([FromBody][Bind("Nombre,Descripcion,Portada,GenerosActivos")] MangaCrearViewModel mangas)
+        public async Task<IActionResult> AgregarManga([FromBody] MangaCrearViewModel mangas)
         {
             Manga newmanga = new Manga()
             {
                 Descripcion = mangas.Descripcion,
-                Nombre = mangas.Nombre
+                Nombre = mangas.Nombre,
+                Fecha_publicacion = mangas.Fecha_publicacion,
+                Fecha_subida = DateTime.UtcNow
             };
 
             if (mangas.Portada != null)
@@ -139,7 +141,7 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
             }
             else
             {
-                newmanga.Portada = System.IO.File.ReadAllBytes("./wwwroot/8948_853723421313050_3922329070587876159_n.jpg");
+                newmanga.Portada = System.IO.File.ReadAllBytes("./wwwroot/14671207_791293424306921_4080708202123646799_n.jpg.jpg");
             }
 
             await AniadirGeneros(newmanga, mangas.GenerosActivos.Where(ga => ga.Activo).Select(ga => ga.Genero).ToList());
@@ -149,11 +151,11 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
                 _context.Add(newmanga);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("ObtenerManga", new { animeId = newmanga.MangaId }, newmanga);
+                return StatusCode(StatusCodes.Status201Created, new ApiResponseFormat() { Estado = StatusCodes.Status201Created, Mensaje = $"Manga {newmanga.Nombre} agregado exitosamente", Dato = newmanga });
             }
             catch (Exception ex)
             {
-                return BadRequest(new ApiResponseFormat() { Estado = ex.HResult, Mensaje = ex.Message });
+                return BadRequest(new ApiResponseFormat() { Estado = StatusCodes.Status400BadRequest, Mensaje = ex.Message });
             }
         }
 

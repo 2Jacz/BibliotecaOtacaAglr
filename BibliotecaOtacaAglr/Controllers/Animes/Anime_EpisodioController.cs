@@ -35,7 +35,11 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
                 return BadRequest(new ApiResponseFormat() { Estado = StatusCodes.Status400BadRequest, Mensaje = "Proporcione un anime para ver sus capitulos" });
             }
 
-            List<Anime_Episodio> episodios = await _context.Anime_Episodios.Where(ae => ae.AnimeId == animeId).Include(a => a.UrlServidores).Include(a => a.Anime).ToListAsync();
+            Anime_EpisodiosViewModel episodios = new Anime_EpisodiosViewModel()
+            {
+                Anime = await _context.Animes.FindAsync(animeId),
+                Episodios = await _context.Anime_Episodios.Where(ae => ae.AnimeId == animeId).Include(a => a.UrlServidores).ToListAsync()
+            };
 
             return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = episodios });
         }
@@ -53,33 +57,38 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
             if (episodioid == null)
             {
                 //si no fue asi lo busca por el anime y el numero del capitulo
-                if (numeroEpisodio == null || animeId == null)
+                if (animeId == null)
                 {
-                    return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = "Episodio no encontrado" });
+                    return BadRequest(new ApiResponseFormat() { Estado = StatusCodes.Status400BadRequest, Mensaje = "Anime no especificado" });
+                }
+
+                if (numeroEpisodio == null)
+                {
+                    return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = "Episodio no especificado" });
                 }
                 else
                 {
                     //trae la lista de episodios del anime ordenado por numero de cap
                     episodios = await _context.Anime_Episodios.Where(ae => ae.AnimeId == animeId).Include(a => a.UrlServidores).Include(c => c.Anime).OrderBy(ae => ae.Numero_episodio).ToListAsync();
-                    episodios_navigation.Ep_actual = _context.Anime_Episodios.Where(e => e.Numero_episodio == numeroEpisodio && e.AnimeId == animeId).First();
+                    episodios_navigation.Ep_actual = episodios.FirstOrDefault(e => e.Numero_episodio == numeroEpisodio);
+
+                    if (episodios_navigation.Ep_actual == null)
+                    {
+                        return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = "Episodio no encontrado" });
+                    }
                 }
             }
             else
             {
                 //busca el cap especifico por id
-                episodios_navigation.Ep_actual = await _context.Anime_Episodios.FirstAsync(e => e.EpisodioId == episodioid);
+                episodios = await _context.Anime_Episodios.Where(ae => ae.AnimeId == animeId).Include(a => a.UrlServidores).Include(c => c.Anime).OrderBy(ae => ae.Numero_episodio).ToListAsync();
+                episodios_navigation.Ep_actual = episodios.FirstOrDefault(e => e.EpisodioId == episodioid);
 
                 //verifica si existe
-                if (episodios_navigation.Ep_actual != null)
+                if (episodios == null || episodios_navigation.Ep_actual == null)
                 {
-                    //llena la lista con los caps del anime del capitulo buscado ordenado por numero de cap
-                    episodios = await _context.Anime_Episodios.Where(ae => ae.AnimeId == episodios_navigation.Ep_actual.AnimeId).Include(c => c.Anime).OrderBy(ae => ae.Numero_episodio).ToListAsync();
+                    return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = "Episodio no encontrado" });
                 }
-            }
-
-            if (episodios_navigation.Ep_actual == null)
-            {
-                return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = "Episodio no encontrado" });
             }
 
             //asiga en capitulo anterior y siguiente al cap buscado
@@ -109,8 +118,6 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
             }
 
             Anime_Episodio editado = _context.Anime_Episodios.Include(a => a.UrlServidores).Include(e => e.Anime).FirstOrDefault(e => e.EpisodioId == anime_Episodio.EpisodioId);
-            anime_Episodio.Anime = editado.Anime;
-
             editado.Titulo_episodio = anime_Episodio.Titulo_episodio;
             editado.Numero_episodio = anime_Episodio.Numero_episodio;
             editado.UrlServidores = anime_Episodio.UrlServidores;
@@ -120,7 +127,7 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
                 editado.Nombre_archivo = anime_Episodio.Nombre_Archivo;
             }
 
-            _context.Entry(anime_Episodio).State = EntityState.Modified;
+            _context.Entry(editado).State = EntityState.Modified;
 
             try
             {

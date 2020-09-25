@@ -17,6 +17,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.8" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />
 		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.8" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.8" />
@@ -45,8 +46,8 @@
 	
 	<ItemGroup>
 		<Folder Include="Models\Anime_Episodios_Servidores\ViewModel\" />
-		<Folder Include="Models\Manga_Capitulo_Paginas\ViewModel\" />
 		<Folder Include="Models\Favorito\ViewModel\" />
+		<Folder Include="Models\Manga_Capitulo_Paginas\ViewModel\" />
 		<Folder Include="Models\Permisos\ViewModel\" />
 		<Folder Include="Models\Roles\Entity\" />
 		<Folder Include="wwwroot\libs\" />

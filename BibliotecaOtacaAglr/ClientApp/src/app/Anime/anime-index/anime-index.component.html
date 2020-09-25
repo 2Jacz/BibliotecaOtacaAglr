@@ -1,1 +1,102 @@
-<p>anime-index works!</p>
+<h1>Animes</h1>
+
+<form>
+  <div class="form-inline">
+    <p>
+      Titulo: <input class="form-control" type="text" name="buscar" #buscar>
+      <button class="btn btn-success" type="submit" (click)="">Buscar</button>
+    </p>
+  </div>
+</form>
+<p>
+  <a class="nav-link" [routerLink]="[ '/path' ]">Agregar nuevo</a>
+</p>
+<div class="container">
+  <div class="row" *ngFor="let item of apiAnime.animes">
+    <div class="col-md-4 list-inline">
+      <a [routerLink]="[ '/path' ]">{{item.nombre}}</a>
+      <div class="movie-card">
+        <div class="movie-header"
+          style="background-size: cover; background-image:url(data:image/jpeg;base64,{{item.portada}});"></div>
+        <!--movie-header-->
+        <div class="movie-content">
+          <div class="movie-content-header">
+            <h3 class="movie-title">{{item.nombre}}</h3>
+          </div>
+          <div class="movie-info">
+            <div class="info-section">
+              <ul *ngIf="item.generos !== null && item.generos.length > 0">
+                <li>{{item.generos[item.generos.length - 1]}}</li>
+              </ul>
+              <ul>
+                <li>Episodios: {{item.numero_episodios}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!--movie-content-->
+      </div>
+      <!--movie-card-->
+      </a>
+    </div>
+  </div>
+
+  <!--paginador-->
+  <div class="row">
+    <div class="offset-3" *ngIf="apiAnime.paginador.paginaFinal > 1">
+      <ul class="pagination">
+        <ng-container *ngIf="apiAnime.paginador.paginaActual > 1; else noHayPaginaAnterior">
+          <li class="page-item">
+            <ng-template let-paginaAnterior="apiAnime.paginador.paginaActual - 1">
+              <a class="page-link" [routerLink]="[ '/Animes', paginaAnterior ]">&#60;</a>
+            </ng-template>
+          </li>
+        </ng-container>
+        <ng-template #noHayPaginaAnterior>
+          <li class="page-item">
+            <a class="page-link" style="cursor:pointer">&#60;</a>
+          </li>
+        </ng-template>
+        <li class="page-item" *ngIf="apiAnime.paginador.paginaActual > 6">
+          <a class="page-link" asp-route-pagina="1">1</a>
+        </li>
+        <li class="page-item" *ngIf="apiAnime.paginador.paginaActual > 6">
+          <span id="buscarPagina1" (click)="bucarPagina()" class="page-link">...</span>
+        </li>
+        <ng-container *ngFor="let pagina = apiAnime.paginador.paginaInicial; pagina < apiAnime.paginador.paginaFinal">
+          <li class="((pagina == Model.Pagina.PaginaActual) ? 'active ' : ' ') page-item">
+            <a class="page-link" [routerLink]="[ '/path', pagina ]">{{pagina}}</a>
+          </li>
+        </ng-container>
+
+        <ng-container *ngIf="apiAnime.paginador.paginaActual <= apiAnime.paginador.paginaTotales">
+          <li class="page-item" *ngIf="apiAnime.paginador.paginaActual < apiAnime.paginador.bordeFinal">
+            <span id="buscarPagina2" (click)="bucarPagina()" class="page-link">...</span>
+          </li>
+          <ng-container
+            *ngIf="apiAnime.paginador.paginaActual == apiAnime.paginador.paginasTotales; else esLaPaginaFinal">
+            <li class="page-item active">
+              <a class="page-link"
+                [routerLink]="[ '/path', apiAnime.paginador.paginasTotales ]">{{apiAnime.paginador.paginasTotales}}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" style="cursor:pointer">&#62;</a>
+            </li>
+          </ng-container>
+          <ng-template #esLaPaginaFinal>
+            <li class="page-item">
+              <a class="page-link"
+                [routerLink]="[ '/path', apiAnime.paginador.paginasTotales ]">{{apiAnime.paginador.paginasTotales}}</a>
+            </li>
+            <li class="page-item">
+              <ng-container let-paginaSiguiente="apiAnime.paginador.paginaActual + 1">
+                <a class="page-link" [routerLink]="[ '/path', paginaSiguiente ]">&#62;</a>
+              </ng-container>
+            </li>
+          </ng-template>
+        </ng-container>
+      </ul>
+    </div>
+    <br />
+  </div>
+</div>

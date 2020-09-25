@@ -13,6 +13,12 @@ namespace BibliotecaOtacaAglr.Models.Manga_Capitulos.ViewModel
     public class Manga_CapituloEditarViewModel
     {
         /// <summary>
+        /// Identificador del capitulo
+        /// </summary>
+        [Key]
+        public int CapituloId { get; set; }
+
+        /// <summary>
         /// Nombre del capitulo
         /// </summary>
         [Required]
@@ -22,8 +28,12 @@ namespace BibliotecaOtacaAglr.Models.Manga_Capitulos.ViewModel
         /// Numero de capitulo
         /// </summary>
         [Display(Name = "Numero del capitulo")]
-        [Required]
         public double Numero_capitulo { get; set; }
+
+        /// <summary>
+        /// Relacion con las paginas que contiene el capitulo
+        /// </summary>
+        public List<Manga_Capitulo_Pagina> Paginas { get; set; }
 
         /// <summary>
         /// Fecha de subida del ep

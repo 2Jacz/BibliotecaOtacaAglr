@@ -37,11 +37,11 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
 
             if (!string.IsNullOrEmpty(buscar))
             {
-                ListaAnimes = await _context.Animes.Where(a => a.Nombre.Contains(buscar)).Include(a => a.Generos).ThenInclude(g => g.Genero).Include(a => a.Episodios).ToListAsync();
+                ListaAnimes = await _context.Animes.Where(a => a.Nombre == buscar).ToListAsync();
             }
             else
             {
-                ListaAnimes = await _context.Animes.Include(a => a.Generos).ThenInclude(g => g.Genero).Include(a => a.Episodios).ToListAsync();
+                ListaAnimes = await _context.Animes.ToListAsync();
             }
 
             Paginado animePaginador = new Paginado(ListaAnimes.Count(), pagina);
@@ -51,7 +51,7 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
                 Pagina = animePaginador
             };
 
-            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = ListaAnimes });
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Mensaje = (!string.IsNullOrEmpty(buscar)) ? buscar : "", Dato = animes });
         }
 
         // GET: api/Animes/5
@@ -59,7 +59,7 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
         [AllowAnonymous]
         public async Task<ActionResult<Anime>> ObtenerAnime(int animeId)
         {
-            var anime = await _context.Animes.Include(a => a.Generos).ThenInclude(g => g.Genero).Include(a => a.Episodios).FirstOrDefaultAsync(m => m.AnimeId == animeId);
+            Anime anime = await _context.Animes.Include(a => a.Generos).ThenInclude(g => g.Genero).Include(a => a.Episodios).FirstOrDefaultAsync(m => m.AnimeId == animeId);
 
             if (anime == null)
             {
@@ -94,12 +94,12 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
             }
 
             await AniadirGeneros(modificado, anime.GenerosActivos.Where(ga => ga.Activo).Select(ga => ga.Genero).ToList());
-            _context.Entry(anime).State = EntityState.Modified;
+            _context.Entry(modificado).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
-                return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Mensaje = "Anime modificado exitosamente", Dato = anime });
+                return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Mensaje = $"Anime {modificado.Nombre} modificado exitosamente", Dato = anime });
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -139,18 +139,18 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
             }
             else
             {
-                nuevo.Portada = System.IO.File.ReadAllBytes("./wwwroot/8948_853723421313050_3922329070587876159_n.jpg");
+                nuevo.Portada = System.IO.File.ReadAllBytes("./wwwroot/14671207_791293424306921_4080708202123646799_n.jpg");
             }
 
             try
             {
                 _context.Animes.Add(nuevo);
                 await _context.SaveChangesAsync();
-                return StatusCode(StatusCodes.Status201Created, new ApiResponseFormat() { Estado = StatusCodes.Status201Created, Dato = nuevo });
+                return StatusCode(StatusCodes.Status201Created, new ApiResponseFormat() { Estado = StatusCodes.Status201Created,Mensaje = $"Anime {nuevo.Nombre} creado exitosamente", Dato = nuevo });
             }
             catch (Exception ex)
             {
-                return BadRequest(new ApiResponseFormat() { Estado = StatusCodes.Status406NotAcceptable, Mensaje = ex.Message, Dato = anime });
+                return BadRequest(new ApiResponseFormat() { Estado = StatusCodes.Status406NotAcceptable, Mensaje = ex.Message, Dato = ex.InnerException });
             }
         }
 

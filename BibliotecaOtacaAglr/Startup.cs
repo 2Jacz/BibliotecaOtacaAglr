@@ -68,7 +68,8 @@ namespace BibliotecaOtacaAglr
             services.AddScoped<IMensajero, Mensajero>();
 
             services.AddControllers();
-            services.AddMvc().ConfigureApiBehaviorOptions(options =>
+            services.AddMvcCore()
+                .ConfigureApiBehaviorOptions(options =>
             {
                 options.InvalidModelStateResponseFactory = (context) =>
                 {
@@ -107,7 +108,10 @@ namespace BibliotecaOtacaAglr
                     };
                     return new BadRequestObjectResult(result);
                 };
-            });
+            })
+                .AddNewtonsoftJson(options => {
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
 
             services.AddScoped<IUserService, UserService>();
             services.AddAuthentication(x =>
@@ -159,7 +163,7 @@ namespace BibliotecaOtacaAglr
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };
-                }); ;
+                });
 
             services.ConfigureApplicationCookie(options =>
             {

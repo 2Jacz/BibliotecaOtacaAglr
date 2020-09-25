@@ -25,12 +25,17 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
             _context = context;
         }
 
-        // GET: api/Manga/5/Capitulos
-        [HttpGet]
+        // GET: api/Manga/5/Capitulos/Lista
+        [HttpGet("Lista")]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Manga_Capitulo>>> GetManga_Capitulos(int mangaid)
         {
-            List<Manga_Capitulo> capitulos = await _context.Manga_Capitulos.Where(mc => mc.MangaId == mangaid).ToListAsync();
+            Manga_CapituloViewModel capitulos = new Manga_CapituloViewModel()
+            {
+                Manga = await _context.Mangas.FindAsync(mangaid),
+                Capitulos = await _context.Manga_Capitulos.Where(mc => mc.MangaId == mangaid).ToListAsync()
+            };
+
             return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = capitulos });
         }
 
@@ -39,44 +44,55 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
         [AllowAnonymous]
         public async Task<ActionResult<Manga_Capitulo>> ObtenerManga_Capitulo(int? capituloid, int? numcap, int? mangaId)
         {
-            List<Manga_Capitulo> capitulos = await _context.Manga_Capitulos.Where(m => m.MangaId == mangaId).Include(c => c.Manga).Include(c => c.Paginas).OrderBy(e => e.Numero_capitulo).ToListAsync();
-            Manga_CapituloNavegacionViewModel capitulo = new Manga_CapituloNavegacionViewModel();
+            List<Manga_Capitulo> capitulos = new List<Manga_Capitulo>();
+            Manga_CapituloNavegacionViewModel capitulos_navigation = new Manga_CapituloNavegacionViewModel();
 
             if (capituloid == null)
             {
+                if (mangaId == null)
+                {
+                    return BadRequest(new ApiResponseFormat() { Estado = StatusCodes.Status400BadRequest, Mensaje = "Manga invalido" });
+                }
                 if (numcap == null)
                 {
                     return BadRequest(new ApiResponseFormat() { Estado = StatusCodes.Status400BadRequest, Mensaje = "Capitulo invalido" });
                 }
                 else
                 {
-                    capitulo.Cap_actual = capitulos.Where(e => e.Numero_capitulo == numcap).First();
+                    capitulos = await _context.Manga_Capitulos.Where(m => m.MangaId == mangaId).Include(c => c.Manga).Include(c => c.Paginas).OrderBy(e => e.Numero_capitulo).ToListAsync();
+                    capitulos_navigation.Cap_actual = capitulos.Where(e => e.Numero_capitulo == numcap).First();
+
+                    if (capitulos_navigation.Cap_actual == null)
+                    {
+                        return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = "Capitulo no encintrado" });
+                    }
                 }
             }
             else
             {
-                capitulo.Cap_actual = capitulos.First(c => c.CapituloId == capituloid);
+                capitulos = await _context.Manga_Capitulos.Where(m => m.MangaId == mangaId).Include(c => c.Manga).Include(c => c.Paginas).OrderBy(e => e.Numero_capitulo).ToListAsync();
+                capitulos_navigation.Cap_actual = capitulos.FirstOrDefault(c => c.CapituloId == capituloid);
+
+                if (capitulos_navigation == null || capitulos_navigation.Cap_actual == null)
+                {
+                    return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = "Capitulo no encontrado" });
+                }
             }
 
-            if (capitulo == null || capitulo.Cap_actual == null)
-            {
-                return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = "Capitulo no encontrado" });
-            }
-
-            capitulo.Cap_actual.Paginas = capitulo.Cap_actual.Paginas.OrderBy(p => p.Numero_pagina).ToList();
+            capitulos_navigation.Cap_actual.Paginas = capitulos_navigation.Cap_actual.Paginas.OrderBy(p => p.Numero_pagina).ToList();
 
             for (int i = 0; i < capitulos.Count(); i++)
             {
-                capitulo.Cap_anterior = (i == 0) ? null : capitulos[i - 1];
-                capitulo.Cap_siguiente = (i == capitulos.Count() - 1) ? null : capitulos[i + 1];
+                capitulos_navigation.Cap_anterior = (i == 0) ? null : capitulos[i - 1];
+                capitulos_navigation.Cap_siguiente = (i == capitulos.Count() - 1) ? null : capitulos[i + 1];
 
-                if (capitulos[i].CapituloId == capitulo.Cap_actual.CapituloId) break;
+                if (capitulos[i].CapituloId == capitulos_navigation.Cap_actual.CapituloId) break;
             }
 
-            capitulo.Cap_inicial = capitulos.First().Numero_capitulo;
-            capitulo.Cap_final = capitulos.Last().Numero_capitulo;
+            capitulos_navigation.Cap_inicial = capitulos.First().Numero_capitulo;
+            capitulos_navigation.Cap_final = capitulos.Last().Numero_capitulo;
 
-            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = capitulo });
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = capitulos_navigation });
         }
 
         // PUT: api/Manga/5/Capitulos/Editar/5
@@ -94,6 +110,7 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
             editado.Nombre_capitulo = manga.Nombre_capitulo;
             editado.Numero_capitulo = manga.Numero_capitulo;
             editado.Fecha_publicacion = manga.Fecha_publicacion;
+            editado.Paginas = manga.Paginas;
 
             _context.Entry(editado).State = EntityState.Modified;
 

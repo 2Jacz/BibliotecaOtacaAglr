@@ -1,4 +1,5 @@
 ﻿using BibliotecaOtacaAglr.Models.Generos.Entity;
+using System.Text.Json.Serialization;
 
 namespace BibliotecaOtacaAglr.Models.Animes.Entity
 {

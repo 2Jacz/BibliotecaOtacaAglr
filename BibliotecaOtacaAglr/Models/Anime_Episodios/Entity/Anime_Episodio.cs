@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using BibliotecaOtacaAglr.Models.Anime_Episodios_Servidores;
 using BibliotecaOtacaAglr.Models.Animes.Entity;
 
@@ -52,12 +53,15 @@ namespace BibliotecaOtacaAglr.Models.Anime_Episodios.Entity
         /// <summary>
         /// Relacion al anime que pertenece el episodio
         /// </summary>
+        [Required]
         [ForeignKey("Anime")]
         public int AnimeId { get; set; }
 
         /// <summary>
         /// Instancia del anime al que pertenece el episodio (o navegacion)
         /// </summary>
+        [Required]
+        [JsonIgnore]
         public Anime Anime { get; set; }
 
         /// <summary>

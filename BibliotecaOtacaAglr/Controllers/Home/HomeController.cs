@@ -26,10 +26,10 @@ namespace BibliotecaOtacaAglr.Controllers.Home
             {
                 HomeIndexViewModel inicio = new HomeIndexViewModel()
                 {
-                    AnimeUltimos10EpsAgregados = _context.Anime_Episodios.OrderBy(ae => ae.Fecha_subida).Take(10).ToList(),
-                    MangaUltimos10CapsAgregados = _context.Manga_Capitulos.OrderBy(ae => ae.Fecha_subida).Take(10).ToList(),
-                    Ultimos7AnimesAgregados = _context.Animes.OrderBy(ae => ae.Fecha_subida).Take(7).ToList(),
-                    Ultimos7MangasAgregados = _context.Mangas.OrderBy(ae => ae.Fecha_subida).Take(7).ToList()
+                    AnimeUltimos10EpsAgregados = _context.Anime_Episodios.OrderByDescending(ae => ae.Fecha_subida).Take(10).ToList(),
+                    MangaUltimos10CapsAgregados = _context.Manga_Capitulos.OrderByDescending(ae => ae.Fecha_subida).Take(10).ToList(),
+                    Ultimos7AnimesAgregados = _context.Animes.OrderByDescending(ae => ae.Fecha_subida).Take(7).ToList(),
+                    Ultimos7MangasAgregados = _context.Mangas.OrderByDescending(ae => ae.Fecha_subida).Take(7).ToList()
                 };
                 return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = inicio });
             }

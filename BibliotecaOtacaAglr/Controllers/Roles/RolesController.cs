@@ -43,7 +43,7 @@ namespace BibliotecaOtacaAglr.Controllers.Roles
 
         // GET: api/Roles/Agregar
         [HttpPost("Agregar")]
-        public async Task<ActionResult> AgregarRol([FromBody][Bind("Name")] IdentityRole rol)
+        public async Task<ActionResult> AgregarRol([FromBody] IdentityRole rol)
         {
             if (string.IsNullOrEmpty(rol.Name))
             {
@@ -95,7 +95,7 @@ namespace BibliotecaOtacaAglr.Controllers.Roles
 
         // PUT: api/Roles/Gestionar-Usuarios
         [HttpPut("Gestionar-Usuarios")]
-        public async Task<ActionResult> AsignarUsuariosAlRol([FromBody][Bind("Rol_Id,Rol_Nombre,AniadirUsuariosIds,EliminarUsuariosIds")] RolAdministrarUsuariosViewModel model)
+        public async Task<ActionResult> AsignarUsuariosAlRol([FromBody] RolAdministrarUsuariosViewModel model)
         {
             if (string.IsNullOrEmpty(model.Rol_Id) || string.IsNullOrEmpty(model.Rol_Nombre))
             {

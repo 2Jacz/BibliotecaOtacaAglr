@@ -36,16 +36,16 @@ namespace BibliotecaOtacaAglr.Controllers.Generos
         }
 
         // GET: api/Generos/5
-        [HttpGet("{id}")]
+        [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Genero>>> ObtenerGenero(string nombre = "")
+        public async Task<ActionResult<IEnumerable<Genero>>> ObtenerGenero(int? id, string nombre = "")
         {
-            if (string.IsNullOrEmpty(nombre))
+            if (string.IsNullOrEmpty(nombre) && id == null)
             {
                 return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = "Genero incorrecto" });
             }
 
-            Genero genero = await _context.Generos.Where(g => g.Nombre == nombre).Include(g => g.Animes).Include(g => g.Mangas).FirstOrDefaultAsync();
+            Genero genero = await _context.Generos.Include(g => g.Animes).ThenInclude(a => a.Anime).Include(g => g.Mangas).FirstOrDefaultAsync(g => g.Nombre == nombre || g.GeneroId == id);
 
             if (genero == null)
             {

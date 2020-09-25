@@ -1,5 +1,4 @@
-﻿using BibliotecaOtacaAglr.Models.Anime_Episodios.Entity;
-using BibliotecaOtacaAglr.Models.Generos.ViewModel;
+﻿using BibliotecaOtacaAglr.Models.Generos.ViewModel;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -53,13 +52,6 @@ namespace BibliotecaOtacaAglr.Models.Animes.ViewModel
         /// </summary>
         [Display(Name = "Generos")]
         public List<GeneroAsignadoViewModel> GenerosActivos { get; set; }
-
-        /// <summary>
-        /// Generos del anime
-        /// </summary>
-        [Display(Name = "Episodios")]
-        public List<Anime_Episodio> Episodios { get; set; }
-
 
         /// <summary>
         /// Instancia para editar animes

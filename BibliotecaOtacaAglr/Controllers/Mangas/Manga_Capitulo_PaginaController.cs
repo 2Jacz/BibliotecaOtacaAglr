@@ -53,7 +53,7 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost("Agregar")]
-        public async Task<ActionResult<Manga_Capitulo_Pagina>> AgregarPaginas([FromBody][Bind("Numero_pagina,CapituloId")] Manga_Capitulo_Pagina paginas, [FromForm][Bind("Pagina")] IFormFile pagina)
+        public async Task<ActionResult<Manga_Capitulo_Pagina>> AgregarPaginas([FromBody] Manga_Capitulo_Pagina paginas, [FromForm] IFormFile pagina)
         {
             try
             {

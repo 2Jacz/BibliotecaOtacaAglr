@@ -4,8 +4,8 @@ import { Manga } from '../Mangas/Entity/manga';
 import { MangaCapitulo } from '../Manga_Capitulos/Entity/manga-capitulo';
 
 export class Index {
-  public AnimeUltimos10EpsAgregados: AnimeEpisodios[];
-  public Ultimos7AnimesAgregados: Anime[];
-  public MangaUltimos10CapsAgregados: MangaCapitulo[];
-  public Ultimos7MangasAgregados: Manga[];
+  public animeUltimos10EpsAgregados: AnimeEpisodios[];
+  public ultimos7AnimesAgregados: Anime[];
+  public mangaUltimos10CapsAgregados: MangaCapitulo[];
+  public ultimos7MangasAgregados: Manga[];
 }

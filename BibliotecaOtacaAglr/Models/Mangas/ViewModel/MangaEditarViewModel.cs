@@ -14,7 +14,7 @@ namespace BibliotecaOtacaAglr.Models.Mangas.ViewModel
         /// Identificador del manga
         /// </summary>
         [Required]
-        public int Id { get; set; }
+        public int mangaId { get; set; }
 
         /// <summary>
         /// Nombre del manga
@@ -45,18 +45,11 @@ namespace BibliotecaOtacaAglr.Models.Mangas.ViewModel
         public List<GeneroAsignadoViewModel> GenerosActivos { get; set; }
 
         /// <summary>
-        /// Relacion con los capitulos que tiene el manga
-        /// </summary>
-        public List<Manga_Capitulo> Capitulos { get; set; }
-
-
-        /// <summary>
         /// Instancia para editar un manga en la base de datos
         /// </summary>
         public MangaEditarViewModel()
         {
             GenerosActivos = new List<GeneroAsignadoViewModel>();
-            Capitulos = new List<Manga_Capitulo>();
         }
     }
 }
