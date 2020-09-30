@@ -30,7 +30,7 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Manga_Capitulo_Pagina>>> ObtenerCapituloPaginas(int capituloid)
         {
-            List<Manga_Capitulo_Pagina> paginas = await _context.Manga_Capitulo_Paginas.Where(p => p.CapituloId == capituloid).OrderBy(p => p.Numero_pagina).ToListAsync();
+            List<Manga_Capitulo_Pagina> paginas = await _context.Manga_Capitulo_Paginas.Where(p => p.Manga_CapituloId == capituloid).OrderBy(p => p.Numero_pagina).ToListAsync();
             return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = paginas });
         }
 

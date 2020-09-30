@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './home/home.component';
 import { AnimeIndexComponent } from './Anime/anime-index/anime-index.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { ErrorHandlerService } from 'src/Services/ErrorHandler/error-handler-service.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,11 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     AppRoutingModule,
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: ErrorHandlerService,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

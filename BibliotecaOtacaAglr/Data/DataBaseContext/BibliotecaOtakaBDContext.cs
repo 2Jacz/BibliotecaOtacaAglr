@@ -45,12 +45,12 @@ namespace BibliotecaOtacaAglr.Data.DataBaseContext
 
             modelBuilder.Entity<Anime_Episodio>()
                .HasMany(e => e.UrlServidores)
-               .WithOne(a => a.Anime_Episodio);
+               .WithOne();
 
             modelBuilder.Entity<Anime_Episodio_Servidor>()
-                .HasOne(af => af.Anime_Episodio)
-                .WithMany(u => u.UrlServidores)
-                .HasForeignKey(af => af.EpisodioId)
+                .HasOne<Anime_Episodio>()
+                .WithMany()
+                .HasForeignKey(af => af.Anime_EpisodioId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Anime_Genero>()
@@ -96,7 +96,7 @@ namespace BibliotecaOtacaAglr.Data.DataBaseContext
             modelBuilder.Entity<Manga_Capitulo_Pagina>()
                .HasOne(c => c.Capitulo)
                .WithMany(p => p.Paginas)
-               .HasForeignKey(c => c.CapituloId)
+               .HasForeignKey(c => c.Manga_CapituloId)
                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Manga_Genero>()

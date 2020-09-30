@@ -1,5 +1,6 @@
 ﻿using BibliotecaOtacaAglr.Models.Manga_Capitulos.Entity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BibliotecaOtacaAglr.Models.Manga_Capitulo_Paginas.Entity
 {
@@ -29,7 +30,8 @@ namespace BibliotecaOtacaAglr.Models.Manga_Capitulo_Paginas.Entity
         /// Relacion con el capitulo de manga al que pertenece la pagina
         /// </summary>
         [Required]
-        public int CapituloId { get; set; }
+        [ForeignKey("Manga_Capitulo")]
+        public int Manga_CapituloId { get; set; }
 
         /// <summary>
         /// Instancia del capitulo de manga al que pertenece la pagina (o navegacion)

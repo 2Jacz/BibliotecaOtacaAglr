@@ -25,6 +25,6 @@ namespace BibliotecaOtacaAglr.Models.Anime_Episodios_Servidores
         /// </summary>
         [Required]
         [ForeignKey("Anime_Episodio")]
-        public int EpisodioId { get; set; }
+        public int Anime_EpisodioId { get; set; }
     }
 }

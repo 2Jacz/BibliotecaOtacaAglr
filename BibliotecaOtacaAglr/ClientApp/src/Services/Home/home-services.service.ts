@@ -10,16 +10,18 @@ import { baseurl } from '../BaseUrl';
 export class HomeService {
   response: ApiResponse = new ApiResponse();
   viewmodel: Index = new Index();
+  errorMessage: any;
 
   constructor(private http: HttpClient) { }
 
   public GetHomeData() {
-    this.http.get<ApiResponse>(baseurl + 'Home/Index').toPromise().then(res => {
-      this.response = res;
-
-      if (this.response.estado === 200) {
+    this.http.get<ApiResponse>(baseurl + 'Home/Index').subscribe(res => {
+      if (res.estado && res.estado === 200) {
+        this.response = res;
         this.viewmodel = res.dato as Index;
       }
+    }, (error) => {
+      this.errorMessage = error;
     });
   }
 }

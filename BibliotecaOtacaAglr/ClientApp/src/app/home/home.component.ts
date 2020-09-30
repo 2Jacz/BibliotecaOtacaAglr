@@ -11,6 +11,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.apiHome.GetHomeData();
+    console.log(this.apiHome.viewmodel);
   }
 
 }
