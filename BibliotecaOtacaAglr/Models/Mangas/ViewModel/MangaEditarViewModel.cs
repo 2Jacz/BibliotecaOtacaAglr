@@ -1,6 +1,4 @@
 ﻿using BibliotecaOtacaAglr.Models.Generos.ViewModel;
-using BibliotecaOtacaAglr.Models.Manga_Capitulos.Entity;
-using BibliotecaOtacaAglr.Models.Mangas.Entity;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -13,26 +11,29 @@ namespace BibliotecaOtacaAglr.Models.Mangas.ViewModel
         /// <summary>
         /// Identificador del manga
         /// </summary>
-        [Required]
-        public int mangaId { get; set; }
+        [Required(ErrorMessage = "Manga requerido")]
+        public int MangaId { get; set; }
 
         /// <summary>
         /// Nombre del manga
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Nombre del manga requerido")]
+        [MaxLength(100, ErrorMessage = "No mas de 100 caracteres")]
         public string Nombre { get; set; }
 
         /// <summary>
         /// Descripcion del manga
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Descripcion requerida")]
+        [StringLength(600, ErrorMessage = "Maximo {2} caracteres y minimo {1}", MinimumLength = 15)]
         [DataType(DataType.Text)]
         public string Descripcion { get; set; }
 
         /// <summary>
         /// Fecha de publicacion del anime
         /// </summary>
-        public DateTime Fecha_publicacion { get; set; }
+        [DataType(DataType.Date, ErrorMessage = "Formato de fecha invalido. ejemplo de fecha: yyyy-MM-ddTHH:mm:ss")]
+        public DateTime? Fecha_publicacion { get; set; }
 
         /// <summary>
         /// Portada del manga en arreglo de bytes

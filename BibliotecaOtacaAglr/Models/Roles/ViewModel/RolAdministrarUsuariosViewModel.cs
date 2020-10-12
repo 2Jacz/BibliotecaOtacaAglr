@@ -2,6 +2,9 @@
 
 namespace BibliotecaOtacaAglr.Models.Roles.ViewModel
 {
+    /// <summary>
+    /// Modelo para agregar/quitar usuarios a un rol
+    /// </summary>
     public class RolAdministrarUsuariosViewModel
     {
         [Required]

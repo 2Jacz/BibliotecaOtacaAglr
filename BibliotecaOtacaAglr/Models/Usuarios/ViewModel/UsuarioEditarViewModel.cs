@@ -2,6 +2,9 @@
 
 namespace BibliotecaOtacaAglr.Models.Usuarios.ViewModel
 {
+    /// <summary>
+    /// Modelo para modificar la informacion de un usuario
+    /// </summary>
     public class UsuarioEditarViewModel
     {
         [Required(ErrorMessage = "Ocurrio un error al localizar el usuario.")]

@@ -12,15 +12,16 @@ namespace BibliotecaOtacaAglr.Models.Animes.ViewModel
     public class AnimeEditarViewModel
     {
         /// <summary>
-        /// Nombre del anime
+        /// Identificador del anime
         /// </summary>
         [Key]
         public int AnimeId { get; set; }
 
         /// <summary>
-        /// Descripcion del anime
+        /// Nombre del anime
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Nombre del anime requerido")]
+        [StringLength(100, ErrorMessage = "Maximo {2} caracteres y minimo {1}", MinimumLength = 2)]
         public string Nombre { get; set; }
 
         /// <summary>
@@ -33,17 +34,19 @@ namespace BibliotecaOtacaAglr.Models.Animes.ViewModel
         /// <summary>
         /// Fecha de publicacion del anime
         /// </summary>
-        public DateTime Fecha_publicacion { get; set; }
+        [DataType(DataType.Date, ErrorMessage = "Formato de fecha invalido. ejemplo de fecha: yyyy-MM-ddTHH:mm:ss")]
+        public DateTime? Fecha_publicacion { get; set; }
 
         /// <summary>
         /// Portada del anime
         /// </summary>
+        [DataType(DataType.Upload, ErrorMessage = "Formato de archivo invalido")]
         public IFormFile Portada { get; set; }
 
         /// <summary>
         /// Numero de episodios del anime
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Numero de episodios requerido")]
         [Display(Name = "Numero de episodios")]
         public int Numero_episodios { get; set; }
 

@@ -13,12 +13,13 @@ using BibliotecaOtacaAglr.Models.Others.Entity.Paginador;
 using BibliotecaOtacaAglr.Models.Animes.ViewModel;
 using System.IO;
 using BibliotecaOtacaAglr.Models.Generos.Entity;
+using BibliotecaOtacaAglr.Helpers;
 
 namespace BibliotecaOtacaAglr.Controllers.Animes
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class AnimesController : ControllerBase
     {
         private readonly BibliotecaOtakaBDContext _context;
@@ -37,7 +38,7 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
 
             if (!string.IsNullOrEmpty(buscar))
             {
-                ListaAnimes = await _context.Animes.Where(a => a.Nombre == buscar).ToListAsync();
+                ListaAnimes = await _context.Animes.Where(a => a.Nombre.ToLower().Contains(buscar.ToLower())).ToListAsync();
             }
             else
             {
@@ -51,7 +52,7 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
                 Pagina = animePaginador
             };
 
-            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Mensaje = (!string.IsNullOrEmpty(buscar)) ? buscar : "", Dato = animes });
+            return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Mensaje = buscar, Dato = animes });
         }
 
         // GET: api/Animes/5
@@ -86,11 +87,18 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
             modificado.Descripcion = anime.Descripcion;
             modificado.Fecha_publicacion = anime.Fecha_publicacion;
 
+            string mensajePortadaInvalida = ".";
             if (anime.Portada != null)
             {
-                MemoryStream ms = new MemoryStream();
-                anime.Portada.CopyTo(ms);
-                modificado.Portada = ms.ToArray();
+                if (FormFileExtensions.IsImage(anime.Portada))
+                {
+                    MemoryStream ms = new MemoryStream();
+                    anime.Portada.CopyTo(ms);
+                    modificado.Portada = ms.ToArray();
+                } else
+                {
+                    mensajePortadaInvalida = " pero el formato de imagen invalido, se pondra la imagen de portada default.";
+                }
             }
 
             await AniadirGeneros(modificado, anime.GenerosActivos.Where(ga => ga.Activo).Select(ga => ga.Genero).ToList());
@@ -99,7 +107,7 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
             try
             {
                 await _context.SaveChangesAsync();
-                return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Mensaje = $"Anime {modificado.Nombre} modificado exitosamente", Dato = anime });
+                return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Mensaje = $"Anime {modificado.Nombre} modificado exitosamente{mensajePortadaInvalida}", Dato = anime });
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -118,7 +126,7 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost("Agregar")]
-        public async Task<ActionResult<Anime>> CrearAnime([FromBody] AnimeCrearViewModel anime)
+        public async Task<ActionResult<Anime>> CrearAnime([FromForm] AnimeCrearViewModel anime)
         {
             Anime nuevo = new Anime()
             {
@@ -133,9 +141,12 @@ namespace BibliotecaOtacaAglr.Controllers.Animes
 
             if (anime.Portada != null)
             {
-                MemoryStream ms = new MemoryStream();
-                anime.Portada.CopyTo(ms);
-                nuevo.Portada = ms.ToArray();
+                if (FormFileExtensions.IsImage(anime.Portada))
+                {
+                    MemoryStream ms = new MemoryStream();
+                    anime.Portada.CopyTo(ms);
+                    nuevo.Portada = ms.ToArray();
+                }
             }
             else
             {

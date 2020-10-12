@@ -23,14 +23,14 @@ namespace BibliotecaOtacaAglr.Models.Anime_Episodios.Entity
         /// <summary>
         /// Titulo del episodio
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Titulo del episodio requerido")]
         [Display(Name = "Titulo del capitulo")]
         public string Titulo_episodio { get; set; }
 
         /// <summary>
         /// Numero de episodio
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Numero de episodio requerido")]
         [Display(Name = "Numero del episodio")]
         public double Numero_episodio { get; set; }
 
@@ -42,7 +42,7 @@ namespace BibliotecaOtacaAglr.Models.Anime_Episodios.Entity
         /// <summary>
         /// Nombre del archivo (con extencion)
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Archivo invalido")]
         public string Nombre_archivo { get; set; }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace BibliotecaOtacaAglr.Models.Anime_Episodios.Entity
         /// <summary>
         /// Instancia del anime al que pertenece el episodio (o navegacion)
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Anime del capitulo requerido")]
         [JsonIgnore]
         public Anime Anime { get; set; }
 

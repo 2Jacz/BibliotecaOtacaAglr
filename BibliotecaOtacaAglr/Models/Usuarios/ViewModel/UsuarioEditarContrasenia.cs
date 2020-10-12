@@ -2,6 +2,9 @@
 
 namespace BibliotecaOtacaAglr.Models.Usuarios.ViewModel
 {
+    /// <summary>
+    /// Modelo con la informacion para modificar la contrasenia del usuario
+    /// </summary>
     public class UsuarioEditarContrasenia
     {
         [Required(ErrorMessage = "Contrasenia requerida")]

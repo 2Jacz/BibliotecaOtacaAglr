@@ -23,38 +23,42 @@ namespace BibliotecaOtacaAglr.Models.Animes.Entity
         /// <summary>
         /// Nombre del anime
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Nombre del anime requerido")]
+        [StringLength(100, ErrorMessage = "Maximo {2} caracteres y minimo {1}", MinimumLength = 2)]
         public string Nombre { get; set; }
 
         /// <summary>
         /// Descripcion del anime
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Descripcion del anime requerida")]
+        [StringLength(600, ErrorMessage = "Maximo {2} caracteres y minimo {1}", MinimumLength = 15)]
         [DataType(DataType.Text)]
         public string Descripcion { get; set; }
 
         /// <summary>
         /// Imagen de portada en arreglo de bytes del anime
         /// </summary>
+        [Required(ErrorMessage = "Imagen de portada requerida")]
         public byte[] Portada { get; set; }
 
         /// <summary>
         /// Fecha de publicacion del anime
         /// </summary>
-        public DateTime Fecha_publicacion { get; set; }
-
-        /// <summary>
-        /// Numero de episodios que tiene el anime (no incluir OVA ni peliculas)
-        /// </summary>
-        [Required]
-        [Display(Name = "Numero de episodios")]
-        public int Numero_episodios { get; set; }
+        [DataType(DataType.Date, ErrorMessage = "Formato de fecha invalido. ejemplo de fecha: yyyy-MM-ddTHH:mm:ss")]
+        public DateTime? Fecha_publicacion { get; set; }
 
         /// <summary>
         /// Fecha de subida del anime
         /// </summary>
         [Required]
         public DateTime Fecha_subida { get; set; }
+
+        /// <summary>
+        /// Numero de episodios que tiene el anime (no incluir OVA ni peliculas)
+        /// </summary>
+        [Required(ErrorMessage = "Cantidad de episodios requerida")]
+        [Display(Name = "Numero de episodios")]
+        public int Numero_episodios { get; set; }
 
         /// <summary>
         /// Relacion con Generos M:M (generos que tiene asignado el anime)

@@ -18,18 +18,19 @@ namespace BibliotecaOtacaAglr.Models.Manga_Capitulo_Paginas.Entity
         /// <summary>
         /// Numero de pagina
         /// </summary>
+        [Required(ErrorMessage = "Especifique el numero de pagina")]
         public double Numero_pagina { get; set; }
 
         /// <summary>
         /// La pagina en arreglo de bytes
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Debe incluir imagen")]
         public byte[] Pagina { get; set; }
 
         /// <summary>
         /// Relacion con el capitulo de manga al que pertenece la pagina
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Debe pertenecer a un capitulo valido")]
         [ForeignKey("Manga_Capitulo")]
         public int Manga_CapituloId { get; set; }
 

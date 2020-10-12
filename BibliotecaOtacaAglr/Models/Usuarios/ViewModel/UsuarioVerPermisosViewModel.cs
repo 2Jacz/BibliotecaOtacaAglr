@@ -1,13 +1,18 @@
 ﻿using BibliotecaOtacaAglr.Models.Others.Entity.Permisos;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BibliotecaOtacaAglr.Models.Usuarios.ViewModel
 {
+    /// <summary>
+    /// Clase para mostrar los permisos de un usuario
+    /// </summary>
     public class UsuarioVerPermisosViewModel
     {
         /// <summary>
-        /// IUsuario a administrar permisos
+        /// Usuario a administrar permisos
         /// </summary>
+        [Required(ErrorMessage = "Usuario requerido")]
         public string IdUsuario { get; set; }
 
         /// <summary>

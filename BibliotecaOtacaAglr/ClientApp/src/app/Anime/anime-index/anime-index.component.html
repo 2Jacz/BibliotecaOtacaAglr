@@ -1,23 +1,21 @@
 <h1>Animes</h1>
 <!--Buscar-->
-<form>
-  <div class="form-inline">
-    <p>
-      Titulo: <input class="form-control" type="text" name="buscar" #buscar>
-      <button class="btn btn-success" type="submit">Buscar</button>
-    </p>
-  </div>
-</form>
+<div class="form-inline row">
+  <mat-label>Titulo:</mat-label>
+  <input matInput id="busqueda" name="busqueda" [(ngModel)]="busqueda" [placeholder]="placeholder()">
+  <button mat-raised-button color="primary" (click)="buscarPagina(1)">Buscar</button>
+</div>
 <!--agregar nuevo-->
 <p>
-  <a class="nav-link" [routerLink]="[ '/Anime', Agregar ]">Agregar nuevo</a>
+  <a class="nav-link" [routerLink]="[ '/Anime/Agregar' ]">Agregar nuevo</a>
 </p>
-<label *ngIf="apiAnime.errorMessage"><strong>Warning!</strong> {{apiAnime.errorMessage}}</label>
+<label *ngIf="errorMessage" class="text-danger"><strong>Warning!</strong> {{errorMessage}}</label>
+<label *ngIf="buscado" class="text-center">Buscando con nombre parecido a <strong>{{buscado}}.</strong></label>
 <div class="container">
   <!--mostrar datos-->
-  <ng-container *ngIf="apiAnime.animes && apiAnime.animes.length > 0; else noHayAnimes">
+  <ng-container *ngIf="animes && animes.length > 0; else noHayAnimes">
     <div class="row">
-      <div class="col-md-4 list-inline" *ngFor="let item of apiAnime.animes">
+      <div class="col-md-4 list-inline" *ngFor="let item of  animes">
         <a [routerLink]="[ '/Anime', item.animeId ]">
           <!--movie-card-->
           <div class="movie-card">
@@ -47,47 +45,47 @@
   </ng-template>
   <!--paginador-->
   <div class="row">
-    <div class="offset-3" *ngIf="apiAnime.paginador.paginaFinal > 1">
+    <div class="offset-3" *ngIf="paginador.paginaFinal > 1">
       <ul class="pagination">
-        <ng-container *ngIf="apiAnime.paginador.paginaActual > 1; else noHayPaginaAnterior">
+        <ng-container *ngIf="paginador.paginaActual > 1; else noHayPaginaAnterior">
           <li class="page-item">
-            <ng-template let-paginaAnterior="apiAnime.paginador.paginaActual - 1">
-              <a class="page-link" [routerLink]="[ '/Animes', paginaAnterior ]">&#60;</a>
-            </ng-template>
+            <a class="page-link" style="cursor:pointer" (click)="pagAnterior()">&#60;</a>
           </li>
         </ng-container>
         <ng-template #noHayPaginaAnterior>
           <li class="page-item">
-            <a class="page-link" style="cursor:pointer">&#60;</a>
+            <a class="page-link">&#60;</a>
           </li>
         </ng-template>
-        <li class="page-item" *ngIf="apiAnime.paginador.paginaActual > 6">
-          <a class="page-link" [routerLink]="[ '/Animes', 1 ]">1</a>
-          <span id="buscarPagina1" (click)="bucarPagina()" class="page-link">...</span>
+        <li class="page-item" *ngIf="paginador.paginaActual > 6">
+          <a class="page-link" (click)="buscarPagina(1)">1</a>
+          <span id="buscarPagina1" style="cursor:pointer" (click)="irAPagina()" class="page-link">...</span>
         </li>
-        <ng-container *ngFor="let numPagina of apiAnime.rangoPaginador">
-          <li [ngClass]="{'active': numPagina === apiAnime.paginador.paginaActual, 'page-item': true}">
-            <a class="page-link" [routerLink]="[ '/Index', numPagina ]">{{numPagina}}</a>
+        <ng-container *ngFor="let numPagina of rangoPaginador">
+          <li [ngClass]="{'active': numPagina ===  paginador.paginaActual, 'page-item': true}">
+            <a class="page-link" style="cursor:pointer" (click)="buscarPagina(numPagina)">{{numPagina}}</a>
           </li>
         </ng-container>
-        <ng-container *ngIf="apiAnime.paginador.paginaActual <= apiAnime.paginador.paginasTotales">
-          <li class="page-item" *ngIf="apiAnime.paginador.paginaActual < apiAnime.paginador.paginaFinal">
-            <span id="buscarPagina2" (click)="bucarPagina()" class="page-link">...</span>
+        <ng-container *ngIf="paginador.paginaActual <= paginador.paginasTotales">
+          <li class="page-item" *ngIf="paginador.paginaActual < (paginador.paginasTotales - 6)">
+            <span id="buscarPagina2" style="cursor:pointer" (click)="irAPagina()" class="page-link">...</span>
           </li>
-          <ng-container *ngIf="apiAnime.paginador.paginaActual === apiAnime.paginador.paginasTotales; else noEsLaPaginaFinal">
+          <ng-container *ngIf="paginador.paginaActual === paginador.paginasTotales; else noEsLaPaginaFinal">
             <li class="page-item active">
-              <a class="page-link" [routerLink]="[ '/Anime', apiAnime.paginador.paginasTotales ]">{{apiAnime.paginador.paginasTotales}}</a>
+              <a class="page-link" style="cursor:pointer"
+                (click)="buscarPagina(paginador.paginasTotales)">{{paginador.paginasTotales}}</a>
             </li>
             <li class="page-item">
-              <a class="page-link" style="cursor:pointer">&#62;</a>
+              <a class="page-link">&#62;</a>
             </li>
           </ng-container>
           <ng-template #noEsLaPaginaFinal>
             <li class="page-item">
-              <a class="page-link" [routerLink]="[ '/Anime', apiAnime.paginador.paginasTotales ]">{{apiAnime.paginador.paginasTotales}}</a>
+              <a class="page-link" style="cursor:pointer"
+                (click)="buscarPagina(paginador.paginasTotales)">{{paginador.paginasTotales}}</a>
             </li>
             <li class="page-item">
-                <a class="page-link" [routerLink]="[ '/Anime', (apiAnime.paginador.paginaActual + 1) ]">&#62;</a>
+              <a class="page-link" style="cursor:pointer" (click)="pagSiguiente()">&#62;</a>
             </li>
           </ng-template>
         </ng-container>

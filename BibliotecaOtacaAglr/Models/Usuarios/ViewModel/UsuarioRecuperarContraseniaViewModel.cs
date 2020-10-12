@@ -2,6 +2,9 @@
 
 namespace BibliotecaOtacaAglr.Models.Usuarios.ViewModel
 {
+    /// <summary>
+    /// Modelo con la informacion para recuperar la contrasenia de usuario
+    /// </summary>
     public class UsuarioRecuperarContraseniaViewModel
     {
         [Required(ErrorMessage = "Correo electronico requerido")]

@@ -1,3 +1,3 @@
 ng generate service ../Services/Usuarios/UsuariosServices
 ng generate class ../Classes/Usuarios/Usuarios
-ng generate component Usuarios/UsuariosComponent
+ng generate component Usuarios/UsuariosComponent --module app

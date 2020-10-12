@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { AppComponent } from './app.component';
@@ -12,6 +12,8 @@ import { HomeComponent } from './home/home.component';
 import { AnimeIndexComponent } from './Anime/anime-index/anime-index.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ErrorHandlerService } from 'src/Services/ErrorHandler/error-handler-service.service';
+import { AnimeAgregarComponent } from './Anime/anime-agregar/anime-agregar.component';
+import { MaterialModule } from './app-material-module';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,8 @@ import { ErrorHandlerService } from 'src/Services/ErrorHandler/error-handler-ser
     HomeComponent,
     AnimeIndexComponent,
     PageNotFoundComponent,
-    NavBarComponent
+    NavBarComponent,
+    AnimeAgregarComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -27,7 +30,9 @@ import { ErrorHandlerService } from 'src/Services/ErrorHandler/error-handler-ser
     HttpClientModule,
     FormsModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
+    MaterialModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

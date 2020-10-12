@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BibliotecaOtacaAglr.Models.UsuarioTokens
 {
+    /// <summary>
+    /// Modelo para regresar la informacion de usuario y su token
+    /// </summary>
     public class UsuarioToken
     {
         [Key]

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace BibliotecaOtacaAglr.Models.Usuarios.ViewModel
 {
     /// <summary>
-    /// Instancia para modificar a un usuario
+    /// Instancia para modificar permisos a un usuario
     /// </summary>
     public class UsuarioEditarPermisosViewModel
     {

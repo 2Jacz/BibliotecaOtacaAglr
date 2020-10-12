@@ -79,12 +79,12 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
         [AllowAnonymous]
         public async Task<IActionResult> Edit(int mangaId, [FromBody] MangaEditarViewModel mangas)
         {
-            if (mangaId != mangas.mangaId)
+            if (mangaId != mangas.MangaId)
             {
                 return NotFound(new ApiResponseFormat() { });
             }
 
-            Manga editado = await _context.Mangas.Include(m => m.Generos).ThenInclude(g => g.Genero).Include(m => m.Capitulos).FirstOrDefaultAsync(a => a.MangaId == mangas.mangaId);
+            Manga editado = await _context.Mangas.Include(m => m.Generos).ThenInclude(g => g.Genero).Include(m => m.Capitulos).FirstOrDefaultAsync(a => a.MangaId == mangas.MangaId);
             editado.Nombre = mangas.Nombre;
             editado.Descripcion = mangas.Descripcion;
             editado.Fecha_publicacion = mangas.Fecha_publicacion;
@@ -107,7 +107,7 @@ namespace BibliotecaOtacaAglr.Controllers.Mangas
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                if (!MangaExists(mangas.mangaId))
+                if (!MangaExists(mangas.MangaId))
                 {
                     return NotFound(new ApiResponseFormat() { Estado = StatusCodes.Status404NotFound, Mensaje = "Manga invalido" });
                 }

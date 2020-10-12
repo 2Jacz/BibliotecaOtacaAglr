@@ -4,14 +4,16 @@ using BibliotecaOtacaAglr.Data.DataBaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BibliotecaOtacaAglr.Migrations
 {
     [DbContext(typeof(BibliotecaOtakaBDContext))]
-    partial class BibliotecaOtakaBDContextModelSnapshot : ModelSnapshot
+    [Migration("20201012044153_models_update_3")]
+    partial class models_update_3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

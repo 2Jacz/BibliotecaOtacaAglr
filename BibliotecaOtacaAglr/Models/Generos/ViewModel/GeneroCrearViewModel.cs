@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BibliotecaOtacaAglr.Models.Generos.ViewModel
 {
     public class GeneroCrearViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "El genero debe tener un nombre")]
         public string Nombre { get; set; }
     }
 }

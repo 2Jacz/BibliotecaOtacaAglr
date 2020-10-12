@@ -23,7 +23,7 @@ namespace BibliotecaOtacaAglr.Models.Anime_Episodios_Servidores
         /// <summary>
         /// Relacion con el episodio al que pertenecera la url
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "El linke debe pertenecer a un episodio valido")]
         [ForeignKey("Anime_Episodio")]
         public int Anime_EpisodioId { get; set; }
     }

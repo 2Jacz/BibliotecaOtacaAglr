@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Anime } from 'src/classes/Animes/Entity/anime';
+import { Paginador } from 'src/classes/Otros/paginador';
 import { AnimeService } from 'src/Services/Anime/anime-services.service';
 
 @Component({
@@ -7,10 +9,92 @@ import { AnimeService } from 'src/Services/Anime/anime-services.service';
   styleUrls: ['./anime-index.component.css']
 })
 export class AnimeIndexComponent implements OnInit {
+  public animes: Anime[] = []; // lista de animes
+  public paginador: Paginador = new Paginador(); // configuracion del paginador
+  public errorMessage: any; // error en caso de fallar
+  public rangoPaginador: number[] = []; // paginas del paginador
+  public busqueda = '';
+  public buscado = '';
 
   constructor(private apiAnime: AnimeService) { }
 
   ngOnInit(): void {
-    this.apiAnime.getAnimes();
+    this.apiAnime.getAnimes().subscribe(
+      (res) => {
+        if (res.estado === 200) {
+          this.animes = res.dato.datos;
+          this.paginador = res.dato.pagina;
+          this.rangoPaginadorFiller(this.paginador.paginaInicial, this.paginador.paginaFinal);
+        } else {
+          this.errorMessage = res.mensaje;
+        }
+      }, (error) => {
+        this.errorMessage = error;
+      });
+  }
+
+  /**
+ * Ajusta el rango que abarcara el paginado
+ * @param paginaInicial primera pagina
+ * @param paginaFinal ultima pagina
+ */
+  private rangoPaginadorFiller(paginaInicial: number, paginaFinal: number) {
+    this.rangoPaginador = [];
+    let pagina = paginaInicial;
+    while (pagina < paginaFinal) {
+      this.rangoPaginador.push(pagina);
+      pagina++;
+    }
+  }
+
+  irAPagina() {
+    const pagina = parseInt(prompt('Ingrese una pagina correcta (1-' + this.paginador.paginasTotales + ')', '1'), 10);
+
+    if (pagina != null) {
+      if (pagina >= 1 && pagina <= this.paginador.paginasTotales) {
+        this.buscarPagina(pagina);
+      } else {
+        alert('Ingrese una pagina valida (1-' + this.paginador.paginasTotales + ')');
+      }
+    }
+
+    this.buscado = this.busqueda;
+    this.busqueda = '';
+  }
+
+  buscarPagina(pagina: number) {
+    this.buscado = this.busqueda;
+    this.busqueda = '';
+
+    if (this.busqueda.trim().length <= 0 || pagina !== this.paginador.paginaActual) {
+      this.apiAnime.getAnimesFilter(this.buscado, pagina).subscribe(
+        (res) => {
+          if (res.estado === 200) {
+            this.animes = res.dato.datos;
+            this.paginador = res.dato.pagina;
+            this.rangoPaginadorFiller(this.paginador.paginaInicial, this.paginador.paginaFinal);
+          } else {
+            this.errorMessage = res.mensaje;
+          }
+        }, (error) => {
+          this.errorMessage = error;
+        });
+    }
+  }
+
+  pagAnterior() {
+    this.buscarPagina((this.paginador.paginaActual - 1));
+  }
+
+  pagSiguiente() {
+    this.buscarPagina((this.paginador.paginaActual + 1));
+  }
+
+  placeholder(): string {
+    if (this.buscado.trim().length > 0) {
+      return this.buscado;
+    } else {
+      return 'Ingrese un nombre a buscar';
+    }
   }
 }

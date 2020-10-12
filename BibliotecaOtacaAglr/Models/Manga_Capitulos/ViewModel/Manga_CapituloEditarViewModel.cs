@@ -21,12 +21,13 @@ namespace BibliotecaOtacaAglr.Models.Manga_Capitulos.ViewModel
         /// <summary>
         /// Nombre del capitulo
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Nombre del capitulo requerido")]
         public string Nombre_capitulo { get; set; }
 
         /// <summary>
         /// Numero de capitulo
         /// </summary>
+        [Required(ErrorMessage = " requerido")]
         [Display(Name = "Numero del capitulo")]
         public double Numero_capitulo { get; set; }
 
@@ -43,6 +44,12 @@ namespace BibliotecaOtacaAglr.Models.Manga_Capitulos.ViewModel
         /// <summary>
         /// Fecha de publicacion del ep
         /// </summary>
-        public DateTime Fecha_publicacion { get; set; }
+        [DataType(DataType.Date, ErrorMessage = "Formato de fecha invalido. ejemplo de fecha: yyyy-MM-ddTHH:mm:ss")]
+        public DateTime? Fecha_publicacion { get; set; }
+
+        public Manga_CapituloEditarViewModel()
+        {
+            Paginas = new List<Manga_Capitulo_Pagina>();
+        }
     }
 }

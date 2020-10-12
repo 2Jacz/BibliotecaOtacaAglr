@@ -22,7 +22,7 @@ namespace BibliotecaOtacaAglr.Models.Generos.Entity
         /// <summary>
         /// Nombre del genero
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "El genero debe tener un nombre")]
         public string Nombre { get; set; }
 
         /// <summary>

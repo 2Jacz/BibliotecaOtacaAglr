@@ -1,43 +1,40 @@
-<h1>Hello, world!</h1>
-<ng-container *ngIf="apiHome.errorMessage; else correct" class="alert alert-warning">
-  <strong>Warning!</strong> {{apiHome.errorMessage}}
+<ng-container *ngIf="errorMessage; else correct" class="alert alert-warning">
+  <strong>Warning!</strong> {{errorMessage}}
 </ng-container>
 <ng-template #correct>
   <div class="container">
-    <h2>Mensaje</h2>
-    <ng-container *ngIf="apiHome.response.mensaje !== null; else sinError">
-      <label>{{apiHome.response.mensaje}}</label>
+    <ng-container *ngIf="mensajeApi; else sinError">
+      <strong>Warning!</strong> {{mensajeApi}}
     </ng-container>
     <ng-template #sinError>
-      <label>No hay mensaje</label>
-    </ng-template>
-    <h2>Ultimos 7 animes agregados</h2>
-    <div *ngIf="apiHome.viewmodel.ultimos7AnimesAgregados !== null; else elseTemplate2">
-      <div class="container" style="margin-top: 70px;">
-        <table class="table table-hover table-responsive">
-          <thead class="thead-dark">
-            <tr>
-              <th>#</th>
-              <th>Nombre</th>
-              <th>Descripcion</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of apiHome.viewmodel.ultimos7AnimesAgregados">
-              <td>{{item.animeId}}</td>
-              <td>{{item.nombre}}</td>
-              <td>{{item.descripcion}}</td>
-              <td>
-                <a class="btn btn-warning" [routerLink]="[ '/Anime', item.animeId ]">Select</a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <h2>Ultimos 7 animes agregados</h2>
+      <div *ngIf="viewModel.ultimos7AnimesAgregados && viewModel.ultimos7AnimesAgregados.length > 0; else elseTemplate2">
+        <div class="container" style="margin-top: 70px;">
+          <table class="table table-hover table-responsive">
+            <thead class="thead-dark">
+              <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Descripcion</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of viewModel.ultimos7AnimesAgregados">
+                <td>{{item.animeId}}</td>
+                <td>{{item.nombre}}</td>
+                <td>{{item.descripcion}}</td>
+                <td>
+                  <a class="btn btn-warning" [routerLink]="[ '/Anime', item.animeId ]">Select</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #elseTemplate2>
+          <label>No hay datos</label>
+        </ng-template>
       </div>
-      <ng-template #elseTemplate2>
-        <label>No hay datos</label>
-      </ng-template>
-    </div>
+    </ng-template>
   </div>
 </ng-template>

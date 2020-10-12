@@ -14,7 +14,7 @@ using BibliotecaOtacaAglr.Models.Generos.ViewModel;
 namespace BibliotecaOtacaAglr.Controllers.Generos
 {
     [Route("api/[controller]")]
-    [Authorize]
+    ///[Authorize]
     [ApiController]
     public class GenerosController : ControllerBase
     {
@@ -33,6 +33,26 @@ namespace BibliotecaOtacaAglr.Controllers.Generos
             List<Genero> info = await _context.Generos.OrderBy(g => g.Nombre).ToListAsync();
 
             return Ok(new ApiResponseFormat() { Estado = StatusCodes.Status200OK, Dato = info });
+        }
+
+        [HttpGet("ListaAsignar")]
+        public async Task<ActionResult> ListaGenerosAsignar()
+        {
+            List<Genero> listaGeneros = await _context.Generos.ToListAsync();
+            List<GeneroAsignadoViewModel> generos_para_asignar = new List<GeneroAsignadoViewModel>();
+
+            foreach (Genero genero in listaGeneros)
+            {
+                GeneroAsignadoViewModel genero_asignar = new GeneroAsignadoViewModel()
+                {
+                    Genero = genero,
+                    Activo = false
+                };
+
+                generos_para_asignar.Add(genero_asignar);
+            }
+
+            return Ok(new ApiResponseFormat() { Estado= StatusCodes.Status200OK, Dato = generos_para_asignar });
         }
 
         // GET: api/Generos/5
