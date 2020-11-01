@@ -19,7 +19,7 @@ export class ErrorHandlerService implements HttpInterceptor {
             return throwError(error.error.message);
           } else {
             // server-side error
-            return throwError(error.error);
+            return throwError(error.error.mensaje);
           }
         })
       );

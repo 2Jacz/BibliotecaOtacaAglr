@@ -13,7 +13,14 @@ import { GenerosService } from 'src/Services/Generos/generos-service.service';
   styleUrls: ['./anime-agregar.component.css']
 })
 export class AnimeAgregarComponent implements OnInit {
-  crearAnimeForm: FormGroup;
+  crearAnimeForm: FormGroup = new FormGroup({
+    nombre: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    descripcion: new FormControl('', [Validators.required, Validators.maxLength(500), Validators.minLength(15)]),
+    fecha_publicacion: new FormControl(new Date()),
+    portada: new FormControl(''),
+    numero_episodios: new FormControl('', [Validators.required]),
+    generosActivos: new FormArray([], [Validators.required])
+  });
   listaGeneros: GeneroAsignado[] = [];
   listaGenerosSeleccionados: GeneroAsignado[] = [];
   modelFielsErrors: ModelErrors[] = [
@@ -22,29 +29,19 @@ export class AnimeAgregarComponent implements OnInit {
     { field: 'fecha_publicacion', hasError: false, descriptionError: [] },
     { field: 'portada', hasError: false, descriptionError: [] },
     { field: 'numero_episodios', hasError: false, descriptionError: [] },
-    { field: 'generos', hasError: false, descriptionError: [] }
+    { field: 'generosActivos', hasError: false, descriptionError: [] }
   ];
   imageURL = '';
+  cargando = false;
 
   constructor(private apiAnime: AnimeService, private snackbar: MatSnackBar, private apiGeneros: GenerosService) { }
 
   ngOnInit(): void {
-    this.iniciarFormulario();
     this.obtenerListaGeneros();
   }
 
-  private iniciarFormulario() {
-    this.crearAnimeForm = new FormGroup({
-      nombre: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      descripcion: new FormControl('', [Validators.required, Validators.maxLength(500), Validators.minLength(15)]),
-      fecha_publicacion: new FormControl(new Date()),
-      portada: new FormControl(''),
-      numero_episodios: new FormControl('', [Validators.required]),
-      generos: new FormArray([], [Validators.required])
-    });
-  }
-
   crearAnime(formdata) {
+    this.cargando = true;
     const nuevoAnime: AnimeCrear = {
       descripcion: formdata.descripcion,
       fecha_publicacion: formdata.fecha_publicacion,
@@ -57,9 +54,9 @@ export class AnimeAgregarComponent implements OnInit {
     this.apiAnime.addAnime(nuevoAnime).subscribe(
       (res) => {
         this.snackbar.open(res.mensaje, '', { duration: 10000 });
+        this.cargando = false;
       }, (error) => {
-        this.snackbar.open('Ocurrio un error, verifique que los datos esten correctos', '', { duration: 10000 });
-
+        this.snackbar.open(error.mensaje || 'Ocurrio un error, verifique que los datos esten correctos', '', { duration: 10000 });
         this.checkResponseErrors(error.dato);
       }
     );
@@ -67,11 +64,10 @@ export class AnimeAgregarComponent implements OnInit {
 
   visualizarPortada(event) {
     const file = (event.target as HTMLInputElement).files[0];
+    this.crearAnimeForm.patchValue({ portada: file });
     const reader = new FileReader();
     reader.onload = () => { this.imageURL = reader.result as string; };
     reader.readAsDataURL(file);
-
-    this.crearAnimeForm.patchValue({ portada: file });
   }
 
   selected(e) {
@@ -83,7 +79,7 @@ export class AnimeAgregarComponent implements OnInit {
     }
 
 
-    const generos: FormArray = this.crearAnimeForm.get('generos') as FormArray;
+    const generos: FormArray = this.crearAnimeForm.get('generosActivos') as FormArray;
     if (e.checked) {
       generos.push(new FormControl(e.source.value));
     } else {
@@ -120,17 +116,16 @@ export class AnimeAgregarComponent implements OnInit {
   private checkResponseErrors(errors) {
     // tslint:disable-next-line: forin
     for (const campo in errors) {
-      const model = this.buscarModelFielError(campo.toLowerCase());
+      const model = this.buscarModelFieldError(campo.toLowerCase());
       if (model) {
         model.hasError = true;
         model.descriptionError = errors[campo];
       }
     }
-    console.log(this.modelFielsErrors);
   }
 
   isNotValid = (campo: string) => {
-    const model = this.buscarModelFielError(campo);
+    const model = this.buscarModelFieldError(campo);
     if (model) {
       return model.hasError;
     }
@@ -139,7 +134,7 @@ export class AnimeAgregarComponent implements OnInit {
   }
 
   errorMessage = (campo: string) => {
-    const model = this.buscarModelFielError(campo);
+    const model = this.buscarModelFieldError(campo);
     if (model) {
       return model.descriptionError;
     }
@@ -147,8 +142,8 @@ export class AnimeAgregarComponent implements OnInit {
     return ['Error'];
   }
 
-  buscarModelFielError(campo: string) {
-    for (let i = 0; i <= this.modelFielsErrors.length; i++) {
+  buscarModelFieldError(campo: string) {
+    for (let i = 0; i < this.modelFielsErrors.length; i++) {
       if (this.modelFielsErrors[i].field === campo) {
         return this.modelFielsErrors[i];
       }

@@ -1,8 +1,9 @@
+<mat-progress-bar *ng-if="cargando" mode='indeterminate'></mat-progress-bar>
 <h1>Aniadir anime</h1>
 <hr />
 <div class="row">
   <form class="col-md-6" [formGroup]="crearAnimeForm" (submit)="crearAnime(crearAnimeForm.value)">
-    <mat-form-field>
+    <mat-form-field appearance="fill" style="width:100%">
       <mat-label>Nombre:</mat-label>
       <input matInput formControlName="nombre" id="nombre" placeholder="Ingrese un nombre del anime" autocomplete="off"
         required />
@@ -11,11 +12,11 @@
       <mat-error *ngIf="hasError('nombre','minLength')">El nombre debe contener al menos <strong>8</strong> letras.
       </mat-error>
       <ng-container *ngIf="isNotValid('nombre')">
-        <label class="mat-error" *ngFor="let error of errorMessage('nomber')">{{error}}</label>
+        <label class="mat-error" *ngFor="let message of errorMessage('nombre')">{{message}}</label>
       </ng-container>
     </mat-form-field>
     <br>
-    <mat-form-field>
+    <mat-form-field appearance="fill" style="width:100%">
       <mat-label>Descripcion:</mat-label>
       <textarea matInput formControlName="descripcion" id="descripcion" placeholder="Ingrese una descripcion del anime"
         required></textarea>
@@ -26,33 +27,44 @@
         letras.</mat-error>
       <mat-error *ngIf="hasError('descripcion','maxLength')">El nombre debe contener maximo <strong>500</strong> letras.
       </mat-error>
+      <ng-container *ngIf="isNotValid('descripcion')">
+        <label class="mat-error" *ngFor="let message of errorMessage('descripcion')">{{message}}</label>
+      </ng-container>
     </mat-form-field>
     <br>
-    <mat-form-field>
+    <mat-form-field appearance="fill" style="width:100%">
       <mat-label>Fecha de publicacion:</mat-label>
       <input matInput [matDatepicker]="picker" placeholder="fecha de publicacion del anime. ej: 1870-oct-20"
         formControlName="fecha_publicacion" id="fecha_publicacion" readonly (click)="picker.open()">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
+      <ng-container *ngIf="isNotValid('fecha_publicacion')">
+        <label class="mat-error" *ngFor="let message of errorMessage('fecha_publicacion')">{{message}}</label>
+      </ng-container>
     </mat-form-field>
     <br>
-    <div class="form-group">
+    <div class="form-group" style="width:100%">
       <mat-label>Portada:</mat-label>
-      <input class="custom-file-input" id="portada" class="form-control-file" type="file" name="portada"
-        accept="image/*" (change)="visualizarPortada($event)" />
+      <input id="portada" class="mat-button" type="file" name="portada" accept="image/*" (change)="visualizarPortada($event)" />
+      <ng-container *ngIf="isNotValid('portada')">
+        <label class="mat-error" *ngFor="let message of errorMessage('portada')">{{message}}</label>
+      </ng-container>
     </div>
     <br>
-    <mat-form-field>
+    <mat-form-field appearance="fill" style="width:100%">
       <mat-label>Cantidad de episodios:</mat-label>
       <input matInput type="number" formControlName="numero_episodios" id="numero_episodios" min="1" max="1500"
         required />
       <mat-hint align="end">Entre 1 y 1500 episodios.</mat-hint>
       <mat-error *ngIf="hasError('numero_episodios','required')">Indique una cantidad de episodios.</mat-error>
+      <ng-container *ngIf="isNotValid('numero_episodios')">
+        <label class="mat-error" *ngFor="let message of errorMessage('numero_episodios')">{{message}}</label>
+      </ng-container>
     </mat-form-field>
     <br>
     <ng-container class="form-group" *ngIf="listaGeneros.length !== 0">
       <div style="width:100%; height:42vh; overflow-y:scroll;">
-        <ul class="list-group" *ngFor="let item of listaGeneros; let i=index">
+        <ul class="list-group" *ngFor="let item of listaGeneros">
           <li class="list-group-item form-check">
             <mat-checkbox [(ngModel)]="item.activo" [value]="item.genero.nombre" (change)="selected($event)"
               [ngModelOptions]="{standalone: true}">
@@ -61,15 +73,18 @@
           </li>
         </ul>
       </div>
-      <mat-error *ngIf="hasError('generos','required')">Seleccione al menos un genero.</mat-error>
+      <mat-error *ngIf="hasError('generosActivos','required')">Seleccione al menos un genero.</mat-error>
+      <ng-container *ngIf="isNotValid('generosActivos')">
+        <label class="mat-error" *ngFor="let message of errorMessage('generosActivos')">{{message}}</label>
+      </ng-container>
     </ng-container>
     <br>
     <div class="form-group">
       <button [disabled]="!crearAnimeForm.valid" mat-raised-button color="primary">Crear</button>
     </div>
   </form>
-  <div class="col-md-6">
-    <img class="img-thumbnail" id="ver-portada" [src]="imageURL" />
+  <div class="col-md-6" style="width:100%">
+    <img class="img-fluid img-thumbnail" id="ver-portada" [src]="imageURL" />
   </div>
 </div>
 <div>

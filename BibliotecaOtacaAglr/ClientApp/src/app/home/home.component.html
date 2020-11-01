@@ -1,40 +1,68 @@
-<ng-container *ngIf="errorMessage; else correct" class="alert alert-warning">
-  <strong>Warning!</strong> {{errorMessage}}
+<ng-container *ngIf="errorMessage; else correct">
+  <label class="mat-error"><strong>Warning!</strong>: {{errorMessage}}. </label>
 </ng-container>
 <ng-template #correct>
   <div class="container">
-    <ng-container *ngIf="mensajeApi; else sinError">
-      <strong>Warning!</strong> {{mensajeApi}}
-    </ng-container>
-    <ng-template #sinError>
-      <h2>Ultimos 7 animes agregados</h2>
-      <div *ngIf="viewModel.ultimos7AnimesAgregados && viewModel.ultimos7AnimesAgregados.length > 0; else elseTemplate2">
-        <div class="container" style="margin-top: 70px;">
-          <table class="table table-hover table-responsive">
-            <thead class="thead-dark">
-              <tr>
-                <th>#</th>
-                <th>Nombre</th>
-                <th>Descripcion</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of viewModel.ultimos7AnimesAgregados">
-                <td>{{item.animeId}}</td>
-                <td>{{item.nombre}}</td>
-                <td>{{item.descripcion}}</td>
-                <td>
-                  <a class="btn btn-warning" [routerLink]="[ '/Anime', item.animeId ]">Select</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+    <h2>Ultimos episodios agregados</h2>
+    <ng-container *ngIf="cargando;else ultimosCaps">
+      <div class="row">
+        <div *ngFor="let item of [0,1,2]" class="col-md-4 list-inline">
+          <mat-progress-spinner mode='indeterminate'></mat-progress-spinner>
+          <span>Cargando...</span>
         </div>
-        <ng-template #elseTemplate2>
-          <label>No hay datos</label>
-        </ng-template>
       </div>
+    </ng-container>
+    <ng-template #ultimosCaps>
+      <div fxLayout="row wrap" fxLayoutGap="16px grid">
+        <ng-container *ngIf="homeAnimes.animeUltimos12EpsAgregados?.length > 0; else sinDatos1">
+          <div *ngFor="let item of homeAnimes.animeUltimos12EpsAgregados" fxFlex="33%" fxFlex.xs="100%" fxFlex.sm="33%">
+            <a [routerLink]="[ '/Anime-episodio', item.episodioId ]">
+              <mat-card class="mat-elevation-z4 cardP">
+                <img mat-card-image [src]="loadImage(item.anime_portada)">
+                <mat-card-content>
+                  <mat-label>{{ item.nombre_anime }} - {{ item.numero_episodio }}</mat-label>
+                </mat-card-content>
+              </mat-card>
+            </a>
+          </div>
+        </ng-container>
+      </div>
+    </ng-template>
+    <ng-template #sinDatos1>
+      <label>No hay datos</label>
+    </ng-template>
+  </div>
+  <div class="container">
+    <h2>Ultimos animes agregados</h2>
+    <ng-container *ngIf="cargando;else ultimosAnms">
+      <div class="row">
+        <div *ngFor="let item of [0,1,2]" class="col-md-4 list-inline">
+          <mat-progress-spinner mode='indeterminate'></mat-progress-spinner>
+          <span>Cargando...</span>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #ultimosAnms>
+      <div class="content" fxLayout="row wrap" fxLayoutGap="16px grid">
+        <ng-container *ngIf="homeAnimes.ultimos9AnimesAgregados?.length > 0; else sinDatos2">
+          <div *ngFor="let item of homeAnimes.ultimos9AnimesAgregados" fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%">
+            <a [routerLink]="[ '/Anime', item.animeId ]">
+              <div class="cover card">
+                <div class="wrapper" [style.background]="'url(data:image/*;base64,' + item.portada + ') center/cover no-repeat'">
+                  <div class="data">
+                    <div class="content">
+                      <h1 class="title">{{ item.nombre }}</h1>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </ng-container>
+      </div>
+    </ng-template>
+    <ng-template #sinDatos2>
+      <label>No hay datos</label>
     </ng-template>
   </div>
 </ng-template>

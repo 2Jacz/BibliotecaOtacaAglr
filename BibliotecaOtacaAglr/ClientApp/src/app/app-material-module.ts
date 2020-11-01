@@ -8,7 +8,7 @@ import { NgModule } from '@angular/core';
 // import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';// FROM ANGULAR CORE
+import {MatNativeDateModule} from '@angular/material/core'; // FROM ANGULAR CORE
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 // import {MatRadioModule} from '@angular/material/radio';
@@ -22,7 +22,7 @@ import {MatInputModule} from '@angular/material/input';
 // import {MatToolbarModule} from '@angular/material/toolbar';
 
 // *************** LAYOUT ***************
-// import {MatCardModule} from '@angular/material/card';
+import {MatCardModule} from '@angular/material/card';
 // import {MatDividerModule} from '@angular/material/divider';
 // import {MatExpansionModule} from '@angular/material/expansion';
 // import {MatGridListModule} from '@angular/material/grid-list';
@@ -37,8 +37,8 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 // import {MatBadgeModule} from '@angular/material/badge';
 // import {MatChipsModule} from '@angular/material/chips';
 // import {MatIconModule} from '@angular/material/icon';
-// import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-// import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 // import {MatRippleModule} from '@angular/material/core';
 
 // *************** POPUPS & MODALS ***************
@@ -67,7 +67,7 @@ const AllMaterialModules = [
   // MatMenuModule,
   // MatSidenavModule,
   // MatToolbarModule,
-  // MatCardModule,
+  MatCardModule,
   // MatDividerModule,
   // MatExpansionModule,
   // MatGridListModule,
@@ -80,8 +80,8 @@ const AllMaterialModules = [
   // MatBadgeModule,
   // MatChipsModule,
   // MatIconModule,
-  // MatProgressSpinnerModule,
-  // MatProgressBarModule,
+  MatProgressSpinnerModule,
+  MatProgressBarModule,
   // MatRippleModule,
   // MatBottomSheetModule,
   MatDialogModule,

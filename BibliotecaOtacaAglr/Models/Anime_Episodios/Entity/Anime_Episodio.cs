@@ -61,7 +61,6 @@ namespace BibliotecaOtacaAglr.Models.Anime_Episodios.Entity
         /// Instancia del anime al que pertenece el episodio (o navegacion)
         /// </summary>
         [Required(ErrorMessage = "Anime del capitulo requerido")]
-        [JsonIgnore]
         public Anime Anime { get; set; }
 
         /// <summary>

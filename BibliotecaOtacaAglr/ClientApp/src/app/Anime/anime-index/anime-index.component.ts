@@ -9,12 +9,13 @@ import { AnimeService } from 'src/Services/Anime/anime-services.service';
   styleUrls: ['./anime-index.component.css']
 })
 export class AnimeIndexComponent implements OnInit {
-  public animes: Anime[] = []; // lista de animes
-  public paginador: Paginador = new Paginador(); // configuracion del paginador
-  public errorMessage: any; // error en caso de fallar
-  public rangoPaginador: number[] = []; // paginas del paginador
-  public busqueda = '';
-  public buscado = '';
+  animes: Anime[] = []; // lista de animes
+  paginador: Paginador = new Paginador(); // configuracion del paginador
+  errorMessage = ''; // error en caso de fallar
+  rangoPaginador: number[] = []; // paginas del paginador
+  busqueda = '';
+  buscado = '';
+  cargando = true;
 
   constructor(private apiAnime: AnimeService) { }
 
@@ -28,6 +29,8 @@ export class AnimeIndexComponent implements OnInit {
         } else {
           this.errorMessage = res.mensaje;
         }
+
+        this.cargando = false;
       }, (error) => {
         this.errorMessage = error;
       });
@@ -65,6 +68,7 @@ export class AnimeIndexComponent implements OnInit {
   buscarPagina(pagina: number) {
     this.buscado = this.busqueda;
     this.busqueda = '';
+    this.cargando = true;
 
     if (this.busqueda.trim().length <= 0 || pagina !== this.paginador.paginaActual) {
       this.apiAnime.getAnimesFilter(this.buscado, pagina).subscribe(
@@ -76,6 +80,8 @@ export class AnimeIndexComponent implements OnInit {
           } else {
             this.errorMessage = res.mensaje;
           }
+
+          this.cargando = false;
         }, (error) => {
           this.errorMessage = error;
         });

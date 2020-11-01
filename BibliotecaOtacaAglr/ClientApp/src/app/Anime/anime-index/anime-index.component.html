@@ -2,46 +2,46 @@
 <!--Buscar-->
 <div class="form-inline row">
   <mat-label>Titulo:</mat-label>
-  <input matInput id="busqueda" name="busqueda" [(ngModel)]="busqueda" [placeholder]="placeholder()">
+  <input class="mat-input-element" id="busqueda" name="busqueda" [(ngModel)]="busqueda" [placeholder]="placeholder()">
   <button mat-raised-button color="primary" (click)="buscarPagina(1)">Buscar</button>
 </div>
 <!--agregar nuevo-->
 <p>
   <a class="nav-link" [routerLink]="[ '/Anime/Agregar' ]">Agregar nuevo</a>
 </p>
+<!--Mensaje error-->
 <label *ngIf="errorMessage" class="text-danger"><strong>Warning!</strong> {{errorMessage}}</label>
+<!--que se esta buscando-->
 <label *ngIf="buscado" class="text-center">Buscando con nombre parecido a <strong>{{buscado}}.</strong></label>
 <div class="container">
   <!--mostrar datos-->
-  <ng-container *ngIf="animes && animes.length > 0; else noHayAnimes">
-    <div class="row">
-      <div class="col-md-4 list-inline" *ngFor="let item of  animes">
-        <a [routerLink]="[ '/Anime', item.animeId ]">
-          <!--movie-card-->
-          <div class="movie-card">
-            <div class="movie-header"
-              style="background-size: cover; background-image:url(data:image/jpeg;base64,{{item.portada}});"></div>
-            <!--movie-header-->
-            <div class="movie-content">
-              <div class="movie-content-header">
-                <h3 class="movie-title">{{item.nombre}}</h3>
-              </div>
-              <div class="movie-info">
-                <div class="info-section">
-                  <ul>
-                    <li>Episodios: {{item.numero_episodios}}</li>
-                  </ul>
+  <ng-container *ngIf="cargando; else cargado">
+      <mat-progress-bar mode='indeterminate'></mat-progress-bar>
+  </ng-container>
+  <ng-template #cargado>
+    <div class="content" fxLayout="row wrap" fxLayoutGap="16px grid">
+      <ng-container *ngIf="animes?.length > 0; else noHayAnimes">
+        <div class="anime" *ngFor="let item of animes" fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="33%">
+          <a [routerLink]="[ '/Anime', item.animeId ]">
+            <div class="cover card">
+              <div class="wrapper" [style.background]="'url(data:image/*;base64,' + item.portada + ') center/cover no-repeat'">
+                <div class="data">
+                  <div class="content">
+                    <h1 class="title">{{ item.nombre }}</h1>
+                  </div>
                 </div>
               </div>
             </div>
-            <!--movie-content-->
-          </div>
-        </a>
-      </div>
+            <div class="description">
+              <div class="text">Sipnosis: <br>{{ item.descripcion }}</div>
+            </div>
+          </a>
+        </div>
+      </ng-container>
     </div>
-  </ng-container>
-  <ng-template #noHayAnimes>
-    <strong>No hay animes agregados aun.</strong>
+    <ng-template #noHayAnimes>
+      <strong>No hay animes agregados aun.</strong>
+    </ng-template>
   </ng-template>
   <!--paginador-->
   <div class="row">

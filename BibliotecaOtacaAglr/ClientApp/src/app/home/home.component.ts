@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Index } from 'src/classes/Home';
+import { HomeAnime } from 'src/classes/Home';
 import { HomeService } from 'src/Services/Home/home-services.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
@@ -9,19 +10,25 @@ import { HomeService } from 'src/Services/Home/home-services.service';
 })
 export class HomeComponent implements OnInit {
   errorMessage: string;
-  viewModel: Index = new Index();
-  mensajeApi: string;
+  homeAnimes: HomeAnime = new HomeAnime();
+  cargando: boolean;
 
-  constructor(private apiHome: HomeService) { }
+  constructor(private apiHome: HomeService, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
-    this.apiHome.GetHomeData().subscribe(
+    this.cargarIndex();
+  }
+
+  cargarIndex() {
+    this.cargando = true;
+    this.apiHome.GetHomeAnimeData().subscribe(
       (res) => {
         if (res.estado === 200) {
-          this.viewModel = res.dato;
+          this.homeAnimes = res.dato;
         } else {
-          this.mensajeApi = res.mensaje;
+          this.errorMessage = res.mensaje;
         }
+        this.cargando = false;
       },
       (error) => {
         this.errorMessage = error;
@@ -29,4 +36,7 @@ export class HomeComponent implements OnInit {
     );
   }
 
+  loadImage(imageArray) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl('data:image/*;base64,' + imageArray);;
+  }
 }
