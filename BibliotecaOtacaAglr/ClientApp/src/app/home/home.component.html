@@ -45,7 +45,7 @@
     <ng-template #ultimosAnms>
       <div class="content" fxLayout="row wrap" fxLayoutGap="16px grid">
         <ng-container *ngIf="homeAnimes.ultimos9AnimesAgregados?.length > 0; else sinDatos2">
-          <div *ngFor="let item of homeAnimes.ultimos9AnimesAgregados" fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%">
+          <div class="anime" *ngFor="let item of homeAnimes.ultimos9AnimesAgregados" fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%">
             <a [routerLink]="[ '/Anime', item.animeId ]">
               <div class="cover card">
                 <div class="wrapper" [style.background]="'url(data:image/*;base64,' + item.portada + ') center/cover no-repeat'">
@@ -55,6 +55,9 @@
                     </div>
                   </div>
                 </div>
+              </div>
+              <div class="description">
+                <div class="text">Sipnosis: <br>{{ item.descripcion }}</div>
               </div>
             </a>
           </div>

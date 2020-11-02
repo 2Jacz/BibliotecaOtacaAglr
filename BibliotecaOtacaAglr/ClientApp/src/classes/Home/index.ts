@@ -12,6 +12,8 @@ export class HomeAnimeIndex {
   public nombre: string;
 
   public portada: string;
+
+  public descripcion: string;
 }
 
 export class HomeAnimeEpisodiosIndex {

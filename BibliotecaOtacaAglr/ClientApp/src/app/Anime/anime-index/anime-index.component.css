@@ -25,7 +25,6 @@ h1 {
   box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.08);
 }
 .card .wrapper {
-  background-color: #fff;
   min-height: 400px;
   max-height: 475px;
   position: relative;
@@ -59,38 +58,33 @@ h1 {
 	position: relative;
 }
 .description {
-	opacity: 95%;
   position: absolute;
+  overflow: scroll;
+  top: 0;
   bottom: 0;
-  left: 100%;
-  right: 0;
-  background-color: #008CBA;
-  overflow: hidden;
-  width: 0;
-  height: 100%;
-  transition: .5s ease;
-}
-
-.anime:hover .description {
-  width: 100%;
   left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: .5s ease;
+  background-color: #008CBA;
 }
-
+.anime:hover .description {
+  opacity: .85;
+}
 .anime:hover .card .data .content {
   width: 0;
   height: 0;
   opacity: 0%;
 }
-
 .text {
+  word-break: break-all;
   color: white;
   font-size: 16px;
   position: absolute;
-  top: 10%;
-  left: 5%;
-  -webkit-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  white-space: nowrap;
-  word-break: break-all;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
 }

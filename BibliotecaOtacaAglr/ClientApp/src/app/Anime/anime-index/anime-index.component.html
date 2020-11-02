@@ -6,9 +6,9 @@
   <button mat-raised-button color="primary" (click)="buscarPagina(1)">Buscar</button>
 </div>
 <!--agregar nuevo-->
-<p>
-  <a class="nav-link" [routerLink]="[ '/Anime/Agregar' ]">Agregar nuevo</a>
-</p>
+<div class="row col-md-4">
+  <a class="page-link" [routerLink]="[ '/Anime/Agregar' ]">Agregar nuevo</a>
+</div>
 <!--Mensaje error-->
 <label *ngIf="errorMessage" class="text-danger"><strong>Warning!</strong> {{errorMessage}}</label>
 <!--que se esta buscando-->

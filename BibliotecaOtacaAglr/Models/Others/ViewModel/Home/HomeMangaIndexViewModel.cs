@@ -27,6 +27,8 @@ namespace BibliotecaOtacaAglr.Models.Others.ViewModel.Home
 
         public string Nombre { get; set; }
 
+        public string Descripcion { get; set; }
+
         public byte[] Portada { get; set; }
     }
 

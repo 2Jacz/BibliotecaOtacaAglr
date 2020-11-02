@@ -41,6 +41,7 @@ namespace BibliotecaOtacaAglr.Controllers.Home
                     { 
                         AnimeId = a.AnimeId,
                         Nombre = a.Nombre,
+                        Descripcion = a.Descripcion,
                         Portada = a.Portada
                     }).ToListAsync()
                 };
@@ -69,6 +70,7 @@ namespace BibliotecaOtacaAglr.Controllers.Home
                     Ultimos9MangasAgregados = await _context.Mangas.OrderByDescending(ae => ae.Fecha_subida).Take(9).Select(m => new HomeMangaViewModel() { 
                         MangaId = m.MangaId,
                         Nombre = m.Nombre,
+                        Descripcion = m.Descripcion,
                         Portada = m.Portada
                     }).ToListAsync()
                 };
