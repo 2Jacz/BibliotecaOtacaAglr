@@ -9,31 +9,31 @@
 <div class="row col-md-4">
   <a class="page-link" [routerLink]="[ '/Anime/Agregar' ]">Agregar nuevo</a>
 </div>
+<br>
 <!--Mensaje error-->
 <label *ngIf="errorMessage" class="text-danger"><strong>Warning!</strong> {{errorMessage}}</label>
 <!--que se esta buscando-->
 <label *ngIf="buscado" class="text-center">Buscando con nombre parecido a <strong>{{buscado}}.</strong></label>
 <div class="container">
-  <!--mostrar datos-->
+  <!--loading-->
   <ng-container *ngIf="cargando; else cargado">
-      <mat-progress-bar mode='indeterminate'></mat-progress-bar>
+    <mat-progress-bar mode='indeterminate'></mat-progress-bar>
   </ng-container>
+  <!--mostrar datos-->
   <ng-template #cargado>
-    <div class="content" fxLayout="row wrap" fxLayoutGap="16px grid">
+    <div fxLayout="row wrap" fxLayoutGap="16px grid">
       <ng-container *ngIf="animes?.length > 0; else noHayAnimes">
-        <div class="anime" *ngFor="let item of animes" fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="33%">
+        <div *ngFor="let item of animes" fxFlex="20%" fxFlex.md="33%" fxFlex.sm="50%" fxFlex.xs="50%">
           <a [routerLink]="[ '/Anime', item.animeId ]">
-            <div class="cover card">
-              <div class="wrapper" [style.background]="'url(data:image/*;base64,' + item.portada + ') center/cover no-repeat'">
-                <div class="data">
-                  <div class="content">
-                    <h1 class="title">{{ item.nombre }}</h1>
-                  </div>
+            <div class="anime cover" [style.background-image]="'url(data:image/*;base64,' + item.portada + ')'">
+              <div class="data">
+                <div class="content">
+                  <h1 class="title">{{ item.nombre }}</h1>
                 </div>
               </div>
-            </div>
-            <div class="description">
-              <div class="text">Sipnosis: <br>{{ item.descripcion }}</div>
+              <div class="description">
+                <div class="text"><strong>{{ item.nombre }}</strong><br>{{ item.descripcion }}</div>
+              </div>
             </div>
           </a>
         </div>
@@ -43,6 +43,7 @@
       <strong>No hay animes agregados aun.</strong>
     </ng-template>
   </ng-template>
+  <br>
   <!--paginador-->
   <div class="row">
     <div class="offset-3" *ngIf="paginador.paginaFinal > 1">

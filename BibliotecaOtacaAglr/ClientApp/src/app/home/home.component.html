@@ -15,21 +15,28 @@
     <ng-template #ultimosCaps>
       <div fxLayout="row wrap" fxLayoutGap="16px grid">
         <ng-container *ngIf="homeAnimes.animeUltimos12EpsAgregados?.length > 0; else sinDatos1">
-          <div *ngFor="let item of homeAnimes.animeUltimos12EpsAgregados" fxFlex="33%" fxFlex.xs="100%" fxFlex.sm="33%">
+          <div *ngFor="let item of homeAnimes.animeUltimos12EpsAgregados" fxFlex="20%" fxFlex.md="25%" fxFlex.sm="33%" fxFlex.xs="33%">
             <a [routerLink]="[ '/Anime-episodio', item.episodioId ]">
-              <mat-card class="mat-elevation-z4 cardP">
-                <img mat-card-image [src]="loadImage(item.anime_portada)">
-                <mat-card-content>
-                  <mat-label>{{ item.nombre_anime }} - {{ item.numero_episodio }}</mat-label>
-                </mat-card-content>
-              </mat-card>
+              <div class="anime epcover" [style.background-image]="'url('+item.anime_portada+')'">
+              </div>
+              <div>
+                <label>{{ item.nombre_anime }} - {{ item.numero_episodio }}</label>
+              </div>
             </a>
           </div>
         </ng-container>
       </div>
     </ng-template>
     <ng-template #sinDatos1>
-      <label>No hay datos</label>
+      <div fxFlex="20%" fxFlex.md="25%" fxFlex.sm="33%" fxFlex.xs="33%">
+        <a [routerLink]="[]">
+          <div class="anime epcover" [style.background-image]="'url(assets/images/13256276_708846179218313_8178008124451136419_n.jpg)'">
+          </div>
+          <div>
+            <label class="text-center">Proximamente!!</label>
+          </div>
+        </a>
+      </div>
     </ng-template>
   </div>
   <div class="container">
@@ -43,21 +50,19 @@
       </div>
     </ng-container>
     <ng-template #ultimosAnms>
-      <div class="content" fxLayout="row wrap" fxLayoutGap="16px grid">
+      <div fxLayout="row wrap" fxLayoutGap="16px grid">
         <ng-container *ngIf="homeAnimes.ultimos9AnimesAgregados?.length > 0; else sinDatos2">
-          <div class="anime" *ngFor="let item of homeAnimes.ultimos9AnimesAgregados" fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%">
+          <div *ngFor="let item of homeAnimes.ultimos9AnimesAgregados" fxFlex="25%" fxFlex.md="33%" fxFlex.sm="50%" fxFlex.xs="50%">
             <a [routerLink]="[ '/Anime', item.animeId ]">
-              <div class="cover card">
-                <div class="wrapper" [style.background]="'url(data:image/*;base64,' + item.portada + ') center/cover no-repeat'">
-                  <div class="data">
-                    <div class="content">
-                      <h1 class="title">{{ item.nombre }}</h1>
-                    </div>
+              <div class="anime ancover" [style.background-image]="'url(data:image/*;base64,' + item.portada + ')'">
+                <div class="data">
+                  <div class="content">
+                    <h1 class="title">{{ item.nombre }}</h1>
                   </div>
                 </div>
-              </div>
-              <div class="description">
-                <div class="text">Sipnosis: <br>{{ item.descripcion }}</div>
+                <div class="description">
+                  <div class="text"><strong>{{ item.nombre }}</strong><br>{{ item.descripcion }}</div>
+                </div>
               </div>
             </a>
           </div>
@@ -65,7 +70,20 @@
       </div>
     </ng-template>
     <ng-template #sinDatos2>
-      <label>No hay datos</label>
+      <div fxFlex="25%" fxFlex.md="33%" fxFlex.sm="50%" fxFlex.xs="50%">
+        <a [routerLink]="[]">
+          <div class="anime ancover" [style.background-image]="'url(assets/images/13256276_708846179218313_8178008124451136419_n.jpg)'">
+            <div class="data">
+              <div class="content">
+                <h1 class="title">Proximamente</h1>
+              </div>
+            </div>
+            <div class="description">
+              <div class="text"><strong>Proximamente</strong><br>Aun no se a agregado contenido a esta seccion, por favor estate atento a nuevas actualizaciones!! :D</div>
+            </div>
+          </div>
+        </a>
+      </div>
     </ng-template>
   </div>
 </ng-template>
